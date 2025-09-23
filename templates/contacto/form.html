@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Contacto · Mediconecta{% endblock %}
+{% block content %}
+  <h2>Contacto</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Enviar</button>
+  </form>
+{% endblock %}

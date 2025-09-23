@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Perfil de Usuario{% endblock %}
+
+{% block content %}
+<h1>Perfil de Usuario</h1>
+
+<form method="post">
+    {% csrf_token %}
+    
+    {% for field in form %}
+    <div class="form-group">
+        {{ field.label_tag }}
+        {{ field }}
+        {% if field.help_text %}
+        <small class="form-text text-muted">{{ field.help_text }}</small>
+        {% endif %}
+        {% if field.errors %}
+        <div class="alert alert-danger">
+            {{ field.errors }}
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+    
+    <button type="submit" class="btn btn-primary">Actualizar Perfil</button>
+</form>
+
+<hr>
+
+<div class="danger-zone">
+    <h3>Zona de Peligro</h3>
+    <p>Si eliminas tu cuenta, todos tus datos serán eliminados permanentemente.</p>
+    <a href="{% url 'accounts:user_delete' %}" class="btn btn-danger">Eliminar Cuenta</a>
+</div>
+{% endblock %}

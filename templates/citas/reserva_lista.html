@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Mis Reservas{% endblock %}
+
+{% block content %}
+<h1>Mis Reservas</h1>
+
+<div class="actions">
+    <a href="{% url 'citas:reserva_crear' %}" class="btn btn-primary">Nueva Reserva</a>
+</div>
+
+{% if reservas %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Médico/Paciente</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reserva in reservas %}
+            <tr>
+                <td>{{ reserva.fecha }}</td>
+                <td>{{ reserva.hora_inicio }} - {{ reserva.hora_fin }}</td>
+                <td>
+                    {% if user.paciente %}
+                        Dr. {{ reserva.medico }}
+                    {% else %}
+                        {{ reserva.paciente }}
+                    {% endif %}
+                </td>
+                <td>{{ reserva.get_estado_display }}</td>
+                <td>
+                    <a href="{% url 'citas:reserva_detalle' reserva.id %}" class="btn btn-sm btn-info">Ver</a>
+                    {% if reserva.puede_cancelar and user.paciente %}
+                        <a href="{% url 'citas:reserva_cancelar' reserva.id %}" class="btn btn-sm btn-danger">Cancelar</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No tienes reservas.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Detalle de Reserva{% endblock %}
+
+{% block content %}
+<h1>Detalle de Reserva</h1>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Reserva #{{ reserva.id }}</h2>
+    </div>
+    <div class="card-body">
+        <h3>Información de la Cita</h3>
+        <dl>
+            <dt>Paciente</dt>
+            <dd>{{ reserva.paciente }}</dd>
+            
+            <dt>Médico</dt>
+            <dd>Dr. {{ reserva.medico }}</dd>
+            
+            <dt>Fecha</dt>
+            <dd>{{ reserva.fecha }}</dd>
+            
+            <dt>Hora</dt>
+            <dd>{{ reserva.hora_inicio }} - {{ reserva.hora_fin }}</dd>
+            
+            <dt>Estado</dt>
+            <dd>{{ reserva.get_estado_display }}</dd>
+            
+            <dt>Motivo</dt>
+            <dd>{{ reserva.motivo }}</dd>
+        </dl>
+        
+        {% if user.paciente == reserva.paciente and reserva.puede_cancelar %}
+            <a href="{% url 'citas:reserva_cancelar' reserva.id %}" class="btn btn-danger">Cancelar Reserva</a>
+        {% endif %}
+        
+        <hr>
+        
+        {% if historial %}
+            <h3>Historial Médico</h3>
+            <dl>
+                <dt>Fecha de Atención</dt>
+                <dd>{{ historial.fecha }}</dd>
+                
+                <dt>Diagnóstico</dt>
+                <dd>{{ historial.diagnostico }}</dd>
+                
+                <dt>Tratamiento</dt>
+                <dd>{{ historial.tratamiento }}</dd>
+                
+                {% if historial.observaciones %}
+                    <dt>Observaciones</dt>
+                    <dd>{{ historial.observaciones }}</dd>
+                {% endif %}
+            </dl>
+        {% elif user.medico == reserva.medico and reserva.estado == 'confirmada' %}
+            <h3>Registrar Atención</h3>
+            <a href="{% url 'citas:historial_crear' reserva.id %}" class="btn btn-primary">Registrar Atención</a>
+        {% endif %}
+        
+        <hr>
+        
+        {% if cobro %}
+            <h3>Información de Cobro</h3>
+            <dl>
+                <dt>Monto</dt>
+                <dd>${{ cobro.monto }}</dd>
+                
+                <dt>Estado</dt>
+                <dd>{% if cobro.pagado %}Pagado{% else %}Pendiente{% endif %}</dd>
+                
+                {% if cobro.pagado %}
+                    <dt>Fecha de Pago</dt>
+                    <dd>{{ cobro.fecha_pago }}</dd>
+                    
+                    <dt>Método de Pago</dt>
+                    <dd>{{ cobro.metodo_pago }}</dd>
+                {% endif %}
+            </dl>
+            
+            {% if not cobro.pagado %}
+                {% if user.paciente == reserva.paciente %}
+                    <a href="{% url 'citas:cobro_pagar' reserva.id %}" class="btn btn-success">Pagar</a>
+                {% elif user.medico == reserva.medico %}
+                    <a href="{% url 'citas:cobro_actualizar' reserva.id %}" class="btn btn-primary">Actualizar Cobro</a>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'citas:reserva_lista' %}" class="btn btn-secondary">Volver a la lista</a>
+    </div>
+</div>
+{% endblock %}

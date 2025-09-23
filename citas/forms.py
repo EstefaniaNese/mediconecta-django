@@ -1,0 +1,28 @@
+from django import forms
+from .models import Reserva, HistorialMedico, Cobro
+
+class ReservaForm(forms.ModelForm):
+    class Meta:
+        model = Reserva
+        fields = ['medico', 'fecha', 'hora_inicio', 'hora_fin', 'motivo']
+        widgets = {
+            'fecha': forms.DateInput(attrs={'type': 'date'}),
+            'hora_inicio': forms.TimeInput(attrs={'type': 'time'}),
+            'hora_fin': forms.TimeInput(attrs={'type': 'time'}),
+            'motivo': forms.Textarea(attrs={'rows': 3}),
+        }
+        
+class HistorialMedicoForm(forms.ModelForm):
+    class Meta:
+        model = HistorialMedico
+        fields = ['diagnostico', 'tratamiento', 'observaciones']
+        widgets = {
+            'diagnostico': forms.Textarea(attrs={'rows': 3}),
+            'tratamiento': forms.Textarea(attrs={'rows': 3}),
+            'observaciones': forms.Textarea(attrs={'rows': 3}),
+        }
+        
+class CobroForm(forms.ModelForm):
+    class Meta:
+        model = Cobro
+        fields = ['monto']

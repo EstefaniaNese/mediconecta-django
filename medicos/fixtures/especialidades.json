@@ -1,0 +1,42 @@
+[
+  {
+    "model": "medicos.especialidad",
+    "pk": 1,
+    "fields": {
+      "nombre": "Medicina General",
+      "descripcion": "Atención médica primaria y general"
+    }
+  },
+  {
+    "model": "medicos.especialidad",
+    "pk": 2,
+    "fields": {
+      "nombre": "Cardiología",
+      "descripcion": "Especialidad médica que se ocupa del diagnóstico y tratamiento de las enfermedades del corazón"
+    }
+  },
+  {
+    "model": "medicos.especialidad",
+    "pk": 3,
+    "fields": {
+      "nombre": "Pediatría",
+      "descripcion": "Especialidad médica que estudia al niño y sus enfermedades"
+    }
+  },
+  {
+    "model": "medicos.especialidad",
+    "pk": 4,
+    "fields": {
+      "nombre": "Dermatología",
+      "descripcion": "Especialidad médica encargada del estudio de la piel, su estructura, función y enfermedades"
+    }
+  },
+  {
+    "model": "medicos.especialidad",
+    "pk": 5,
+    "fields": {
+      "nombre": "Traumatología",
+      "descripcion": "Especialidad médica que se dedica al estudio, tratamiento y rehabilitación de las lesiones del aparato locomotor"
+    }
+  }
+]

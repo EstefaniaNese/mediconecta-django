@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Actualizar Cobro{% endblock %}
+
+{% block content %}
+<h1>Actualizar Cobro</h1>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h2>Información de la Reserva</h2>
+    </div>
+    <div class="card-body">
+        <dl>
+            <dt>Paciente</dt>
+            <dd>{{ reserva.paciente }}</dd>
+            
+            <dt>Fecha</dt>
+            <dd>{{ reserva.fecha }}</dd>
+            
+            <dt>Hora</dt>
+            <dd>{{ reserva.hora_inicio }} - {{ reserva.hora_fin }}</dd>
+        </dl>
+    </div>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    
+    {% for field in form %}
+    <div class="form-group">
+        {{ field.label_tag }}
+        {{ field }}
+        {% if field.help_text %}
+        <small class="form-text text-muted">{{ field.help_text }}</small>
+        {% endif %}
+        {% if field.errors %}
+        <div class="alert alert-danger">
+            {{ field.errors }}
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+    
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="{% url 'citas:reserva_detalle' reserva.id %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

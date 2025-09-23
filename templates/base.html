@@ -1,0 +1,40 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Mediconecta{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header class="site-header">
+        <nav class="nav">
+            <a href="{% url 'core:index' %}">Inicio</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'pacientes:dashboard' %}">Paciente</a>
+                <a href="{% url 'medicos:dashboard' %}">Médico</a>
+                <a href="{% url 'citas:reserva_lista' %}">Mis Citas</a>
+                <a href="{% url 'contacto:form' %}">Contacto</a>
+                <a href="{% url 'accounts:profile' %}">Perfil</a>
+                <a href="{% url 'accounts:logout' %}">Salir</a>
+            {% else %}
+                <a href="{% url 'accounts:login' %}">Entrar</a>
+                <a href="{% url 'accounts:register' %}">Registrarse</a>
+                <a href="{% url 'contacto:form' %}">Contacto</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main class="container">
+        {% for message in messages %}
+            <div class="msg {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

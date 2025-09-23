@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Registrar Atención Médica{% endblock %}
+
+{% block content %}
+<h1>Registrar Atención Médica</h1>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h2>Información de la Reserva</h2>
+    </div>
+    <div class="card-body">
+        <dl>
+            <dt>Paciente</dt>
+            <dd>{{ reserva.paciente }}</dd>
+            
+            <dt>Fecha</dt>
+            <dd>{{ reserva.fecha }}</dd>
+            
+            <dt>Motivo</dt>
+            <dd>{{ reserva.motivo }}</dd>
+        </dl>
+    </div>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    
+    {% for field in form %}
+    <div class="form-group">
+        {{ field.label_tag }}
+        {{ field }}
+        {% if field.help_text %}
+        <small class="form-text text-muted">{{ field.help_text }}</small>
+        {% endif %}
+        {% if field.errors %}
+        <div class="alert alert-danger">
+            {{ field.errors }}
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+    
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="{% url 'citas:reserva_detalle' reserva.id %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}
