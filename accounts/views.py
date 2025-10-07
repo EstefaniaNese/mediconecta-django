@@ -1,9 +1,70 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from .forms import RegisterForm
+from django.contrib.auth.views import LogoutView
+from django.views import View
+from django.urls import reverse_lazy
+from .forms import RegisterForm, CustomLoginForm
+
+class CustomLoginView(View):
+    """
+    Vista personalizada de login con mensajes de éxito y error
+    """
+    template_name = 'accounts/login.html'
+    form_class = CustomLoginForm
+    
+    def get(self, request):
+        """Muestra el formulario de login"""
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+    
+    def post(self, request):
+        """Procesa el formulario de login"""
+        form = self.form_class(request.POST)
+        
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            
+            # Autenticar usuario
+            user = authenticate(request, username=username, password=password)
+            
+            if user is not None:
+                login(request, user)
+                messages.success(
+                    request, 
+                    f'¡Bienvenido/a, {username}! Has iniciado sesión exitosamente.'
+                )
+                return redirect('core:index')
+            else:
+                messages.error(
+                    request,
+                    'Credenciales incorrectas. Por favor, verifica tu nombre de usuario y contraseña.'
+                )
+        else:
+            # Solo mostrar errores de campos obligatorios, no de email
+            for field, errors in form.errors.items():
+                if field == 'username' and any('correo' in str(error).lower() or 'email' in str(error).lower() for error in errors):
+                    form.errors[field] = ['Este campo es obligatorio.']
+        
+        return render(request, self.template_name, {'form': form})
+
+class CustomLogoutView(LogoutView):
+    """
+    Vista personalizada de logout con mensaje de confirmación
+    """
+    next_page = reverse_lazy('accounts:login')
+    
+    def dispatch(self, request, *args, **kwargs):
+        """Maneja el logout con mensaje"""
+        username = request.user.username if request.user.is_authenticated else 'Usuario'
+        messages.info(
+            request,
+            f'Has cerrado sesión exitosamente. ¡Hasta luego, {username}!'
+        )
+        return super().dispatch(request, *args, **kwargs)
 
 def register(request):
     if request.method == "POST":
@@ -17,7 +78,7 @@ def register(request):
                 last_name=form.cleaned_data["last_name"],
             )
             login(request, user)
-            messages.success(request, "Cuenta creada correctamente.")
+            messages.success(request, f"¡Cuenta creada exitosamente! Bienvenido/a, {user.username}.")
             return redirect("core:index")
     else:
         form = RegisterForm()

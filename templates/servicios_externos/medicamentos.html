@@ -5,6 +5,15 @@
 
 {% block content %}
 <div class="container mt-4">
+    <!-- Botón de regresar -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <a href="{% url 'servicios_externos:dashboard' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>
+            </a>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-12">
             <h1 class="mb-4">

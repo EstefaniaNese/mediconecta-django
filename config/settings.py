@@ -92,7 +92,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 # ---------------- Auth ----------------
 LOGIN_REDIRECT_URL = "core:index"
-LOGOUT_REDIRECT_URL = "core:index"
+LOGOUT_REDIRECT_URL = "accounts:login"
 LOGIN_URL = "accounts:login"
 
 # ---------------- TZ/Locale ----------------

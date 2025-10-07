@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import AuthenticationForm
 from .validators import (
     validate_password_length,
     validate_password_digit,
@@ -29,3 +30,39 @@ class RegisterForm(forms.ModelForm):
         if data.get("password") != data.get("password2"):
             raise forms.ValidationError("Las contraseñas no coinciden")
         return data
+
+class CustomLoginForm(forms.Form):
+    """
+    Formulario personalizado de login sin validaciones de email
+    """
+    username = forms.CharField(
+        max_length=150,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ingresa tu nombre de usuario'
+        }),
+        label='Nombre de usuario',
+        help_text='Ingresa el nombre de usuario con el que te registraste'
+    )
+    
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ingresa tu contraseña'
+        }),
+        label='Contraseña'
+    )
+    
+    def clean(self):
+        """Validación personalizada sin validaciones de email"""
+        cleaned_data = super().clean()
+        username = cleaned_data.get('username')
+        password = cleaned_data.get('password')
+        
+        if not username:
+            raise forms.ValidationError({'username': ['Este campo es obligatorio.']})
+        
+        if not password:
+            raise forms.ValidationError({'password': ['Este campo es obligatorio.']})
+        
+        return cleaned_data
