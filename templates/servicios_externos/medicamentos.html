@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Búsqueda de Medicamentos{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">
+                <i class="fas fa-pills"></i> Búsqueda de Medicamentos
+            </h1>
+            <p class="lead">Consulta información detallada sobre medicamentos desde la base de datos de OpenFDA</p>
+        </div>
+    </div>
+
+    <!-- Formulario de búsqueda -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Buscar Medicamento</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" id="searchForm">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="nombre_medicamento">Nombre del Medicamento:</label>
+                                    <input type="text" class="form-control" id="nombre_medicamento" 
+                                           name="nombre_medicamento" placeholder="Ej: Ibuprofeno, Paracetamol, Aspirina" 
+                                           required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <button type="submit" class="btn btn-primary btn-block">
+                                        <i class="fas fa-search"></i> Buscar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensaje de error -->
+    {% if error %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert alert-danger" role="alert">
+                <i class="fas fa-exclamation-triangle"></i> {{ error }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Resultados -->
+    {% if medicamentos %}
+    <div class="row">
+        <div class="col-12">
+            <h3>Resultados de la Búsqueda</h3>
+            <p class="text-muted">Se encontraron {{ medicamentos|length }} medicamento(s)</p>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for medicamento in medicamentos %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-capsules"></i> {{ medicamento.nombre }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <p><strong>Principio Activo:</strong> {{ medicamento.principio_activo }}</p>
+                            <p><strong>Fabricante:</strong> {{ medicamento.fabricante }}</p>
+                            
+                            {% if medicamento.descripcion != 'Sin descripción' %}
+                            <div class="mb-3">
+                                <strong>Descripción:</strong>
+                                <p class="text-muted small">{{ medicamento.descripcion|truncatewords:30 }}</p>
+                            </div>
+                            {% endif %}
+                            
+                            {% if medicamento.indicaciones != 'Sin indicaciones' %}
+                            <div class="mb-3">
+                                <strong>Indicaciones:</strong>
+                                <p class="text-muted small">{{ medicamento.indicaciones|truncatewords:25 }}</p>
+                            </div>
+                            {% endif %}
+                            
+                            {% if medicamento.efectos_secundarios != 'Sin información' %}
+                            <div class="mb-3">
+                                <strong>Efectos Secundarios:</strong>
+                                <p class="text-muted small">{{ medicamento.efectos_secundarios|truncatewords:20 }}</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">
+                        <i class="fas fa-database"></i> Fuente: OpenFDA API
+                    </small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Información sobre la API -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Acerca de OpenFDA API</h5>
+                </div>
+                <div class="card-body">
+                    <p>
+                        La API de OpenFDA proporciona acceso a datos públicos de la Administración de 
+                        Alimentos y Medicamentos de Estados Unidos (FDA). Esta información incluye:
+                    </p>
+                    <ul>
+                        <li>Información de etiquetado de medicamentos</li>
+                        <li>Principios activos y fabricantes</li>
+                        <li>Indicaciones y contraindicaciones</li>
+                        <li>Efectos secundarios y advertencias</li>
+                    </ul>
+                    <p class="text-muted small">
+                        <strong>Nota:</strong> Esta información es solo para fines educativos. 
+                        Siempre consulte con un profesional de la salud antes de tomar cualquier medicamento.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-submit
+document.getElementById('searchForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const searchButton = this.querySelector('button[type="submit"]');
+    const originalText = searchButton.innerHTML;
+    
+    // Mostrar loading
+    searchButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando...';
+    searchButton.disabled = true;
+    this.submit();
+});
+</script>
+{% endblock %}

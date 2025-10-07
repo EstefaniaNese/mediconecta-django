@@ -16,6 +16,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
     # local apps
     "core",
     "accounts",
@@ -23,6 +24,7 @@ INSTALLED_APPS = [
     "medicos",
     "contacto",
     "citas",
+    "servicios_externos",
 ]
 
 MIDDLEWARE = [
@@ -96,3 +98,16 @@ LOGIN_URL = "accounts:login"
 TIME_ZONE = os.getenv("DJANGO_TIME_ZONE", "UTC")
 USE_TZ = True
 LANGUAGE_CODE = "es-cl"
+
+# ---------------- Django REST Framework ----------------
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20
+}
