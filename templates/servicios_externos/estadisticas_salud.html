@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Estadísticas de Salud{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">
+                <i class="fas fa-chart-line"></i> Estadísticas de Salud Global
+            </h1>
+            <p class="lead">Información actualizada sobre estadísticas de salud a nivel mundial y nacional</p>
+        </div>
+    </div>
+
+    <!-- Estadísticas Globales -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h3>Estadísticas Globales</h3>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        {% if stats_globales.error %}
+        <div class="col-12">
+            <div class="alert alert-warning" role="alert">
+                <i class="fas fa-exclamation-triangle"></i> {{ stats_globales.error }}
+            </div>
+        </div>
+        {% else %}
+        <div class="col-md-3 mb-3">
+            <div class="card text-center border-primary">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">
+                        <i class="fas fa-users"></i> Casos Totales
+                    </h5>
+                    <h2 class="text-primary">{{ stats_globales.casos_totales|floatformat:0 }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card text-center border-warning">
+                <div class="card-body">
+                    <h5 class="card-title text-warning">
+                        <i class="fas fa-exclamation-circle"></i> Casos Activos
+                    </h5>
+                    <h2 class="text-warning">{{ stats_globales.casos_activos|floatformat:0 }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card text-center border-success">
+                <div class="card-body">
+                    <h5 class="card-title text-success">
+                        <i class="fas fa-heart"></i> Recuperados
+                    </h5>
+                    <h2 class="text-success">{{ stats_globales.recuperados|floatformat:0 }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card text-center border-danger">
+                <div class="card-body">
+                    <h5 class="card-title text-danger">
+                        <i class="fas fa-cross"></i> Fallecidos
+                    </h5>
+                    <h2 class="text-danger">{{ stats_globales.fallecidos|floatformat:0 }}</h2>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Estadísticas de Chile -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h3>Estadísticas de Chile</h3>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        {% if stats_chile.error %}
+        <div class="col-12">
+            <div class="alert alert-warning" role="alert">
+                <i class="fas fa-exclamation-triangle"></i> {{ stats_chile.error }}
+            </div>
+        </div>
+        {% else %}
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-flag"></i> {{ stats_chile.pais }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <p><strong>Casos Totales:</strong></p>
+                            <h4 class="text-info">{{ stats_chile.casos_totales|floatformat:0 }}</h4>
+                        </div>
+                        <div class="col-6">
+                            <p><strong>Casos Activos:</strong></p>
+                            <h4 class="text-warning">{{ stats_chile.casos_activos|floatformat:0 }}</h4>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <p><strong>Recuperados:</strong></p>
+                            <h4 class="text-success">{{ stats_chile.recuperados|floatformat:0 }}</h4>
+                        </div>
+                        <div class="col-6">
+                            <p><strong>Fallecidos:</strong></p>
+                            <h4 class="text-danger">{{ stats_chile.fallecidos|floatformat:0 }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-bar"></i> Estadísticas Adicionales
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <p><strong>Casos Críticos:</strong></p>
+                            <h5 class="text-danger">{{ stats_chile.casos_criticos|floatformat:0 }}</h5>
+                        </div>
+                        <div class="col-6">
+                            <p><strong>Población:</strong></p>
+                            <h5 class="text-info">{{ stats_chile.poblacion|floatformat:0 }}</h5>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <p><strong>Casos por Millón:</strong></p>
+                            <h5 class="text-warning">{{ stats_chile.casos_por_millon|floatformat:0 }}</h5>
+                        </div>
+                        <div class="col-6">
+                            <p><strong>Fallecidos por Millón:</strong></p>
+                            <h5 class="text-danger">{{ stats_chile.fallecidos_por_millon|floatformat:0 }}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Información sobre la API -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Acerca de Disease.sh API</h5>
+                </div>
+                <div class="card-body">
+                    <p>
+                        Disease.sh es una API gratuita que proporciona datos actualizados sobre enfermedades 
+                        y estadísticas de salud a nivel mundial. Los datos incluyen:
+                    </p>
+                    <ul>
+                        <li>Estadísticas globales en tiempo real</li>
+                        <li>Datos por país y región</li>
+                        <li>Información sobre casos activos, recuperados y fallecidos</li>
+                        <li>Estadísticas de población y tasas por millón</li>
+                    </ul>
+                    <p class="text-muted small">
+                        <strong>Actualización:</strong> Los datos se actualizan cada 30 minutos automáticamente.
+                        <br>
+                        <strong>Fuente:</strong> Datos oficiales de organizaciones de salud internacionales.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Función para formatear números grandes
+function formatNumber(num) {
+    if (num >= 1000000) {
+        return (num / 1000000).toFixed(1) + 'M';
+    } else if (num >= 1000) {
+        return (num / 1000).toFixed(1) + 'K';
+    }
+    return num.toString();
+}
+
+// Aplicar formato a los números grandes
+document.addEventListener('DOMContentLoaded', function() {
+    const numbers = document.querySelectorAll('h2, h4, h5');
+    numbers.forEach(function(element) {
+        const text = element.textContent;
+        const number = parseFloat(text.replace(/,/g, ''));
+        if (!isNaN(number) && number >= 1000) {
+            element.textContent = formatNumber(number);
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - APIs Externas{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">Dashboard - Servicios Externos</h1>
+            <p class="lead">Accede a información médica actualizada desde APIs públicas</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- API de Medicamentos -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-pills"></i> Información de Medicamentos
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Consulta información detallada sobre medicamentos, incluyendo principios activos, 
+                        fabricantes, indicaciones y efectos secundarios.
+                    </p>
+                    <p class="text-muted small">
+                        <strong>Fuente:</strong> OpenFDA API
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'servicios_externos:medicamentos' %}" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Buscar Medicamentos
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- API de Estadísticas de Salud -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-line"></i> Estadísticas de Salud
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Visualiza estadísticas globales y por país sobre enfermedades, 
+                        incluyendo casos activos, recuperados y fallecidos.
+                    </p>
+                    <p class="text-muted small">
+                        <strong>Fuente:</strong> Disease.sh API
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'servicios_externos:estadisticas_salud' %}" class="btn btn-success">
+                        <i class="fas fa-chart-bar"></i> Ver Estadísticas
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- API de Nutrición -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-apple-alt"></i> Información Nutricional
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Consulta información nutricional detallada de alimentos, 
+                        incluyendo calorías, proteínas, carbohidratos y vitaminas.
+                    </p>
+                    <p class="text-muted small">
+                        <strong>Fuente:</strong> Base de datos nutricional
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'servicios_externos:nutricion' %}" class="btn btn-warning">
+                        <i class="fas fa-utensils"></i> Consultar Nutrición
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información sobre las APIs -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Información sobre las APIs Utilizadas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h6>OpenFDA API</h6>
+                            <ul class="list-unstyled">
+                                <li><strong>Propósito:</strong> Información de medicamentos</li>
+                                <li><strong>Datos:</strong> Principios activos, fabricantes, indicaciones</li>
+                                <li><strong>Actualización:</strong> Tiempo real</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <h6>Disease.sh API</h6>
+                            <ul class="list-unstyled">
+                                <li><strong>Propósito:</strong> Estadísticas de salud</li>
+                                <li><strong>Datos:</strong> Casos, recuperados, fallecidos</li>
+                                <li><strong>Actualización:</strong> Cada 30 minutos</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <h6>Base Nutricional</h6>
+                            <ul class="list-unstyled">
+                                <li><strong>Propósito:</strong> Información nutricional</li>
+                                <li><strong>Datos:</strong> Calorías, macronutrientes, vitaminas</li>
+                                <li><strong>Actualización:</strong> Base de datos local</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

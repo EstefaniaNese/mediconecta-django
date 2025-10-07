@@ -21,6 +21,7 @@
     
     {% block extra_css %}{% endblock %}
 </head>
+<<<<<<< HEAD
 
 <body class="d-flex flex-column min-vh-100">
     <!-- Header con navbar -->
@@ -94,6 +95,25 @@
                     </div>
                 </div>
             </div>
+=======
+<body>
+    <header class="site-header">
+        <nav class="nav">
+            <a href="{% url 'core:index' %}">Inicio</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'pacientes:dashboard' %}">Paciente</a>
+                <a href="{% url 'medicos:dashboard' %}">Médico</a>
+                <a href="{% url 'citas:reserva_lista' %}">Mis Citas</a>
+                <a href="{% url 'servicios_externos:dashboard' %}">APIs Externas</a>
+                <a href="{% url 'contacto:form' %}">Contacto</a>
+                <a href="{% url 'accounts:profile' %}">Perfil</a>
+                <a href="{% url 'accounts:logout' %}">Salir</a>
+            {% else %}
+                <a href="{% url 'accounts:login' %}">Entrar</a>
+                <a href="{% url 'accounts:register' %}">Registrarse</a>
+                <a href="{% url 'contacto:form' %}">Contacto</a>
+            {% endif %}
+>>>>>>> origin/dev2
         </nav>
     </header>
 

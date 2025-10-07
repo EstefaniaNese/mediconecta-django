@@ -1,0 +1,278 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Información Nutricional{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">
+                <i class="fas fa-apple-alt"></i> Información Nutricional
+            </h1>
+            <p class="lead">Consulta información nutricional detallada de diferentes alimentos</p>
+        </div>
+    </div>
+
+    <!-- Formulario de búsqueda -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Buscar Información Nutricional</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" id="searchForm">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="alimento">Nombre del Alimento:</label>
+                                    <input type="text" class="form-control" id="alimento" 
+                                           name="alimento" placeholder="Ej: manzana, plátano, naranja" 
+                                           required>
+                                    <small class="form-text text-muted">
+                                        Alimentos disponibles: manzana, plátano, naranja
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <button type="submit" class="btn btn-warning btn-block">
+                                        <i class="fas fa-search"></i> Buscar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensaje de error -->
+    {% if error %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert alert-warning" role="alert">
+                <i class="fas fa-exclamation-triangle"></i> {{ error }}
+                {% if info_nutricional.sugerencias %}
+                <br><strong>Alimentos disponibles:</strong> {{ info_nutricional.sugerencias|join:", " }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Resultados -->
+    {% if info_nutricional and not error %}
+    <div class="row">
+        <div class="col-12">
+            <h3>Información Nutricional: {{ info_nutricional.nombre }}</h3>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <!-- Información Principal -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-pie"></i> Información General
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <p><strong>Calorías:</strong></p>
+                            <h3 class="text-warning">{{ info_nutricional.calorias }} kcal</h3>
+                        </div>
+                        <div class="col-6">
+                            <p><strong>Proteínas:</strong></p>
+                            <h3 class="text-info">{{ info_nutricional.proteinas }}g</h3>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <p><strong>Carbohidratos:</strong></p>
+                            <h3 class="text-success">{{ info_nutricional.carbohidratos }}g</h3>
+                        </div>
+                        <div class="col-6">
+                            <p><strong>Grasas:</strong></p>
+                            <h3 class="text-danger">{{ info_nutricional.grasas }}g</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información Detallada -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-microscope"></i> Nutrientes Detallados
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <p><strong>Fibra:</strong></p>
+                            <h4 class="text-success">{{ info_nutricional.fibra }}g</h4>
+                        </div>
+                        <div class="col-6">
+                            <p><strong>Azúcar:</strong></p>
+                            <h4 class="text-warning">{{ info_nutricional.azucar }}g</h4>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <p><strong>Vitamina C:</strong></p>
+                            <h4 class="text-info">{{ info_nutricional.vitamina_c }}mg</h4>
+                        </div>
+                        <div class="col-6">
+                            <p><strong>Potasio:</strong></p>
+                            <h4 class="text-primary">{{ info_nutricional.potasio }}mg</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráfico de Macronutrientes -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Distribución de Macronutrientes</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <div class="progress-circle" data-percent="{{ info_nutricional.proteinas }}" data-color="info">
+                                    <span class="progress-text">{{ info_nutricional.proteinas }}g</span>
+                                </div>
+                                <p class="mt-2"><strong>Proteínas</strong></p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <div class="progress-circle" data-percent="{{ info_nutricional.carbohidratos }}" data-color="success">
+                                    <span class="progress-text">{{ info_nutricional.carbohidratos }}g</span>
+                                </div>
+                                <p class="mt-2"><strong>Carbohidratos</strong></p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <div class="progress-circle" data-percent="{{ info_nutricional.grasas }}" data-color="danger">
+                                    <span class="progress-text">{{ info_nutricional.grasas }}g</span>
+                                </div>
+                                <p class="mt-2"><strong>Grasas</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Información sobre la Base de Datos -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Acerca de la Base de Datos Nutricional</h5>
+                </div>
+                <div class="card-body">
+                    <p>
+                        Esta información nutricional está basada en datos científicos de la USDA 
+                        (United States Department of Agriculture) y otras fuentes confiables. 
+                        Los valores se refieren a 100g de producto fresco.
+                    </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Información Incluida:</h6>
+                            <ul>
+                                <li>Valor energético (calorías)</li>
+                                <li>Macronutrientes (proteínas, carbohidratos, grasas)</li>
+                                <li>Fibra dietética</li>
+                                <li>Azúcares naturales</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Vitaminas y Minerales:</h6>
+                            <ul>
+                                <li>Vitamina C</li>
+                                <li>Potasio</li>
+                                <li>Otros micronutrientes importantes</li>
+                                <li>Información por 100g de producto</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p class="text-muted small">
+                        <strong>Nota:</strong> Los valores pueden variar según la variedad, 
+                        madurez y método de preparación del alimento.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.progress-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    position: relative;
+    background: conic-gradient(var(--bs-info) 0deg, #e9ecef 0deg);
+}
+
+.progress-circle[data-color="success"] {
+    background: conic-gradient(var(--bs-success) 0deg, #e9ecef 0deg);
+}
+
+.progress-circle[data-color="danger"] {
+    background: conic-gradient(var(--bs-danger) 0deg, #e9ecef 0deg);
+}
+
+.progress-text {
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+</style>
+
+<script>
+// Auto-completado para alimentos disponibles
+const alimentos = ['manzana', 'plátano', 'naranja'];
+const input = document.getElementById('alimento');
+
+input.addEventListener('input', function() {
+    const value = this.value.toLowerCase();
+    const suggestions = alimentos.filter(alimento => alimento.includes(value));
+    
+    if (suggestions.length > 0 && value.length > 0) {
+        this.setAttribute('list', 'alimentos-suggestions');
+    }
+});
+
+// Crear datalist para sugerencias
+const datalist = document.createElement('datalist');
+datalist.id = 'alimentos-suggestions';
+alimentos.forEach(alimento => {
+    const option = document.createElement('option');
+    option.value = alimento;
+    datalist.appendChild(option);
+});
+document.body.appendChild(datalist);
+</script>
+{% endblock %}

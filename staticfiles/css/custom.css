@@ -1,5 +1,0 @@
-body { font-family: system-ui, Arial, sans-serif; margin:0; padding:0; }
-.site-header { background:#0c7; padding:12px; }
-.nav a { color:white; margin-right:12px; text-decoration:none; font-weight:600; }
-.container { max-width: 960px; margin: 20px auto; padding: 0 12px; }
-.msg { padding: 8px 12px; border-radius: 6px; background: #eef; margin-bottom: 8px; }
