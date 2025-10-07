@@ -2,6 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.db.models import Q
 from .models import Medico, Especialidad
 from .serializers import MedicoSerializer, MedicoListSerializer, EspecialidadSerializer
@@ -9,9 +10,11 @@ from .serializers import MedicoSerializer, MedicoListSerializer, EspecialidadSer
 class MedicoViewSet(viewsets.ModelViewSet):
     """
     ViewSet para gestionar médicos.
+    Soporta autenticación por token JWT y sesión.
     """
     queryset = Medico.objects.all()
     permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
     
     def get_serializer_class(self):
         if self.action == 'list':
@@ -74,10 +77,12 @@ class MedicoViewSet(viewsets.ModelViewSet):
 class EspecialidadViewSet(viewsets.ReadOnlyModelViewSet):
     """
     ViewSet de solo lectura para especialidades médicas.
+    Soporta autenticación por token JWT y sesión.
     """
     queryset = Especialidad.objects.all()
     serializer_class = EspecialidadSerializer
     permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
     
     @action(detail=True, methods=['get'])
     def medicos(self, request, pk=None):

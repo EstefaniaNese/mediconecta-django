@@ -2,6 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.db.models import Q
 from datetime import date
 from .models import Paciente
@@ -10,9 +11,11 @@ from .serializers import PacienteSerializer, PacienteListSerializer
 class PacienteViewSet(viewsets.ModelViewSet):
     """
     ViewSet para gestionar pacientes.
+    Soporta autenticación por token JWT y sesión.
     """
     queryset = Paciente.objects.all()
     permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
     
     def get_serializer_class(self):
         if self.action == 'list':

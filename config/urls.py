@@ -13,4 +13,6 @@ urlpatterns = [
     # APIs REST
     path("medicos/", include("medicos.api_urls")),
     path("pacientes/", include("pacientes.api_urls")),
+    # API de Autenticación
+    path("api/auth/", include("accounts.api_urls")),
 ]
