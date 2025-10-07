@@ -1,5 +1,433 @@
-body { font-family: system-ui, Arial, sans-serif; margin:0; padding:0; }
-.site-header { background:#0c7; padding:12px; }
-.nav a { color:white; margin-right:12px; text-decoration:none; font-weight:600; }
-.container { max-width: 960px; margin: 20px auto; padding: 0 12px; }
-.msg { padding: 8px 12px; border-radius: 6px; background: #eef; margin-bottom: 8px; }
+/* Estilos personalizados para Mediconecta */
+
+/* Configuración global */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family-primary);
+    line-height: var(--line-height-normal);
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-primary);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Navbar personalizado */
+.navbar {
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%) !important;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-normal);
+    min-height: 76px; /* Altura fija del navbar */
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0; /* Padding vertical controlado */
+    height: 76px; /* Misma altura que el navbar */
+    overflow: hidden; /* Evita que el logo se salga */
+}
+
+.navbar-brand img {
+    height: 55px;
+    width: auto;
+    max-height: calc(100% - 10px); /* Limita la altura al navbar menos padding */
+    object-fit: contain; /* Mantiene las proporciones */
+    transform: scale(1.1); /* Agranda el logo 10% más */
+    transition: all var(--transition-normal);
+}
+
+.navbar-brand:hover img {
+    transform: scale(1.15); /* Efecto hover para agrandar un poco más */
+    filter: brightness(1.1); /* Efecto de brillo al hacer hover */
+}
+
+.navbar-nav .nav-link {
+    color: var(--color-text-white) !important;
+    font-weight: var(--font-weight-medium);
+    padding: 0.5rem 1rem;
+    transition: all var(--transition-normal);
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--color-secondary) !important;
+    transform: translateY(-1px);
+}
+
+.navbar-toggler {
+    border: none;
+    color: var(--color-text-white);
+}
+
+.navbar-toggler:focus {
+    box-shadow: none;
+}
+
+/* Dropdown personalizado */
+.dropdown-menu {
+    border: none;
+    box-shadow: var(--shadow-lg);
+    border-radius: var(--border-radius-md);
+    padding: 0.5rem 0;
+}
+
+.dropdown-item {
+    padding: 0.75rem 1.5rem;
+    transition: all var(--transition-fast);
+}
+
+.dropdown-item:hover {
+    background-color: var(--color-primary);
+    color: var(--color-text-white);
+}
+
+/* Botones personalizados */
+.btn-primary {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--border-radius-md);
+    padding: 0.75rem 1.5rem;
+    transition: all var(--transition-normal);
+}
+
+.btn-primary:hover {
+    background-color: #369d65;
+    border-color: #369d65;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-outline-light {
+    border-color: var(--color-text-white);
+    color: var(--color-text-white);
+    transition: all var(--transition-normal);
+}
+
+.btn-outline-light:hover {
+    background-color: var(--color-text-white);
+    color: var(--color-accent);
+    border-color: var(--color-text-white);
+}
+
+/* Cards personalizadas */
+.card {
+    border: none;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-normal);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-5px);
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    color: var(--color-text-white);
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0 !important;
+    border: none;
+}
+
+/* Formularios personalizados */
+.form-control {
+    border: 2px solid #e9ecef;
+    border-radius: var(--border-radius-md);
+    padding: 0.75rem 1rem;
+    font-size: var(--font-size-base);
+    transition: all var(--transition-normal);
+}
+
+.form-control:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 0.2rem rgba(65, 191, 120, 0.25);
+    background-color: var(--color-bg-primary);
+}
+
+.form-label {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin-bottom: 0.5rem;
+}
+
+/* Tablas personalizadas */
+.table {
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+}
+
+.table-dark {
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(65, 191, 120, 0.05);
+}
+
+/* Alertas personalizadas */
+.alert {
+    border: none;
+    border-radius: var(--border-radius-md);
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.alert-success {
+    background-color: rgba(65, 191, 120, 0.1);
+    color: #155724;
+    border-left: 4px solid var(--color-primary);
+}
+
+.alert-info {
+    background-color: rgba(160, 216, 239, 0.1);
+    color: #0c5460;
+    border-left: 4px solid var(--color-secondary);
+}
+
+.alert-warning {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: #856404;
+    border-left: 4px solid var(--color-warning);
+}
+
+.alert-danger {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #721c24;
+    border-left: 4px solid var(--color-danger);
+}
+
+/* Footer personalizado */
+.footer {
+    background: linear-gradient(135deg, var(--color-dark) 0%, #2c3e50 100%);
+    color: var(--color-text-white);
+    margin-top: auto;
+}
+
+.footer a {
+    color: var(--color-secondary);
+    text-decoration: none;
+    transition: all var(--transition-normal);
+}
+
+.footer a:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Clases de animación */
+.fade-in {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.slide-in {
+    animation: slideIn 0.6s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .navbar {
+        min-height: 60px; /* Navbar más pequeño en móviles */
+    }
+    
+    .navbar-brand {
+        height: 60px; /* Ajustar altura del contenedor */
+        padding: 0.25rem 0; /* Menos padding en móviles */
+    }
+    
+    .navbar-brand img {
+        height: 45px; /* Logo más pequeño en móviles */
+        transform: scale(1.05); /* Menos escala en móviles */
+    }
+    
+    .navbar-brand:hover img {
+        transform: scale(1.1); /* Hover más sutil en móviles */
+    }
+    
+    .btn {
+        padding: 0.5rem 1rem;
+        font-size: var(--font-size-sm);
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .display-3 {
+        font-size: 2rem;
+    }
+    
+    .display-1 {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .btn:last-child {
+        margin-bottom: 0;
+    }
+}
+
+/* Layout Flexbox para evitar vacío bajo el footer */
+main {
+    flex: 1;
+    margin-top: 76px; /* Altura del navbar fijo */
+    min-height: calc(100vh - 76px - 160px); /* Altura total - navbar - footer estimado */
+    display: flex;
+    flex-direction: column;
+}
+
+footer {
+    margin-top: auto;
+    flex-shrink: 0; /* Evita que el footer se comprima */
+}
+
+/* Ajustes para diferentes alturas de pantalla */
+@media (max-height: 600px) {
+    main {
+        margin-top: 60px; /* Navbar más pequeño en pantallas bajas */
+        min-height: calc(100vh - 60px - 100px); /* Ajuste para pantallas bajas */
+    }
+}
+
+/* Ajustes específicos para páginas de login */
+.login-page-container {
+    min-height: calc(100vh - 76px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0;
+}
+
+/* Asegurar que el contenido siempre llene la pantalla en desktop */
+@media (min-width: 992px) {
+    main {
+        min-height: calc(100vh - 76px - 180px); /* Altura más precisa para desktop */
+    }
+    
+    .force-footer-visible {
+        min-height: 100vh; /* Siempre altura completa */
+    }
+    
+    .force-footer-visible .content-wrapper {
+        padding: 3rem 0; /* Más padding en desktop */
+    }
+}
+
+/* Ajustes para zoom reducido y pantallas muy grandes */
+@media (min-width: 1400px) {
+    main {
+        min-height: calc(100vh - 76px - 200px); /* Aún más altura para pantallas grandes */
+    }
+}
+
+/* Ajustes para casos extremos de zoom muy reducido */
+@media (min-width: 1920px) {
+    main {
+        min-height: calc(100vh - 76px - 250px); /* Para pantallas 4K o zoom muy reducido */
+    }
+    
+    .force-footer-visible .content-wrapper {
+        padding: 4rem 0; /* Más padding en pantallas muy grandes */
+    }
+}
+
+/* Clase de emergencia para forzar footer visible */
+.emergency-footer-fix {
+    min-height: 100vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.emergency-footer-fix main {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+@media (max-width: 768px) {
+    main {
+        margin-top: 60px; /* Navbar más pequeño en móviles */
+        min-height: calc(100vh - 60px - 120px); /* Ajuste para móviles */
+    }
+    
+    .login-page-container {
+        min-height: calc(100vh - 60px);
+        padding: 1rem 0;
+    }
+}
+
+/* Clase específica para páginas con poco contenido */
+.full-height-content {
+    min-height: calc(100vh - 76px - 140px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Asegurar que el footer siempre sea visible */
+.force-footer-visible {
+    min-height: 100vh; /* Altura completa de la pantalla */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Distribuye el espacio entre contenido y footer */
+}
+
+.force-footer-visible .content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem 0;
+}

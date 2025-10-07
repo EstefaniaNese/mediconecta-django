@@ -1,10 +1,440 @@
 {% extends 'base.html' %}
-{% block title %}Paciente · Mediconecta{% endblock %}
+{% load static %}
+{% block title %}Perfil de Paciente · Mediconecta{% endblock %}
 {% block content %}
-  <h2>Panel de Paciente</h2>
-  <form method="post">
+    <main class="container mt-5 pt-5">
+        <h1 class="perfil-title text-center mb-5 mt-5">Hola, Juan Pérez</h1>
+
+        <!-- Botones para alternar secciones -->
+        <div class="d-flex justify-content-center mb-5 gap-3 flex-wrap">
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#editarPerfil" aria-expanded="true" aria-controls="editarPerfil">
+                <i class="fas fa-user-edit me-2"></i>Editar Perfil
+            </button>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#reservasHistorial" aria-expanded="false" aria-controls="reservasHistorial">
+                <i class="fas fa-calendar-check me-2"></i>Reservas / Historial
+            </button>
+        </div>
+
+        <!-- Sección Editar Perfil -->
+        <div class="collapse show" id="editarPerfil">
+            <div class="box shadow p-4 rounded mb-4">
+                <h2 class="perfil-subtitle mb-3">Editar Perfil</h2>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <!-- Nombre -->
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre: <span style="color: red;">*</span></label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required autocomplete="off">
+                    </div>
+
+                    <!-- Género -->
+                    <div class="mb-3">
+                        <label for="genero" class="form-label">Género: <span style="color: red;">*</span></label>
+                        <select class="form-select" id="genero" name="genero" required>
+                            <option value="">Seleccione...</option>
+                            <option value="masculino">Masculino</option>
+                            <option value="femenino">Femenino</option>
+                        </select>
+                    </div>
+
+                    <!-- Fecha de nacimiento -->
+                    <div class="mb-3">
+                        <label for="fechaNacimiento" class="form-label">Fecha de nacimiento: <span style="color: red;">*</span></label>
+                        <input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento" required autocomplete="off">
+                    </div>
+
+                    <!-- Previsión médica -->
+                    <div class="mb-3">
+                        <label for="prevision" class="form-label">Previsión médica: <span style="color: red;">*</span></label>
+                        <input type="text" class="form-control" id="prevision" name="prevision" required autocomplete="off">
+                    </div>
+
+                    <!-- Domicilio -->
+                    <div class="mb-3">
+                        <label for="direccion" class="form-label">Domicilio:</label>
+                        <input type="text" class="form-control" id="direccion" name="direccion" autocomplete="off">
+                    </div>
+
+                    <!-- Afecciones médicas -->
+                    <div class="mb-3">
+                        <label class="form-label">Afecciones médicas:</label>
+                        <div id="afecciones-container">
+                            <div class="form-check">
+                                <input class="form-check-input afeccion-checkbox" type="checkbox" value="enfermedad" id="afeccion-enfermedad">
+                                <label class="form-check-label" for="afeccion-enfermedad">Enfermedad</label>
+                                <input type="text" class="form-control mt-2 d-none" id="detalle-enfermedad" placeholder="Especifique la enfermedad">
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input afeccion-checkbox" type="checkbox" value="discapacidad" id="afeccion-discapacidad">
+                                <label class="form-check-label" for="afeccion-discapacidad">Discapacidad</label>
+                                <input type="text" class="form-control mt-2 d-none" id="detalle-discapacidad" placeholder="Especifique la discapacidad">
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input afeccion-checkbox" type="checkbox" value="alergia" id="afeccion-alergia">
+                                <label class="form-check-label" for="afeccion-alergia">Alergia</label>
+                                <input type="text" class="form-control mt-2 d-none" id="detalle-alergia" placeholder="Especifique la alergia">
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input afeccion-checkbox" type="checkbox" value="otra" id="afeccion-otra">
+                                <label class="form-check-label" for="afeccion-otra">Otra</label>
+                                <input type="text" class="form-control mt-2 d-none" id="detalle-otra" placeholder="Especifique otra afección">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Correo electrónico -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Correo Electrónico: <span style="color: red;">*</span></label>
+                        <input type="email" class="form-control" id="email" name="email" required autocomplete="off">
+                    </div>
+
+                    <!-- Contraseña -->
+                    <div class="mb-3">
+                        <label for="contrasena" class="form-label">Contraseña: <span style="color: red;">*</span></label>
+                        <input type="password" class="form-control" id="contrasena" name="contrasena" required autocomplete="off">
+                    </div>
+
+                    <!-- Confirmar contraseña -->
+                    <div class="mb-3">
+                        <label for="confirmarContrasena" class="form-label">Confirme la contraseña: <span style="color: red;">*</span></label>
+                        <input type="password" class="form-control" id="confirmarContrasena" name="confirmarContrasena" required autocomplete="off">
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="d-flex justify-content-center gap-5 mt-4">
+                        <button type="reset" class="btn btn-primary">Limpiar</button>
+                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Sección Reservas / Historial -->
+        <div class="collapse" id="reservasHistorial">
+            <div class="box shadow p-4 rounded mb-4">
+                <h2 class="perfil-subtitle mb-3">Reservas y Consultas Médicas</h2>
+                <p>Puedes reservar, modificar o eliminar tus horas y visualizar tu historial de atenciones.</p>
+                
+                <!-- Tabla de reservas -->
+                <div class="table-responsive mt-3">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Especialista</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>01/09/2025</td>
+                                <td>10:00</td>
+                                <td>Dr. Martínez</td>
+                                <td>Confirmada</td>
+                                <td>
+                                    <button class="btn btn-sm btn-success" title="Editar"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-sm btn-danger" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>05/09/2025</td>
+                                <td>14:30</td>
+                                <td>Dra. Pérez</td>
+                                <td>Pendiente</td>
+                                <td>
+                                    <button class="btn btn-sm btn-success" title="Editar"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-sm btn-danger" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Formulario de nueva reserva -->
+                <div class="mt-4">
+                    <h5><i class="fas fa-calendar-plus me-2"></i>Solicitar nueva reserva</h5>
+                    <form method="post" class="mt-3">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Guardar</button>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="fecha" class="form-label">Fecha <span style="color: red;">*</span></label>
+                                <input type="date" id="fecha" name="fecha" class="form-control" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="hora" class="form-label">Hora <span style="color: red;">*</span></label>
+                                <input type="time" id="hora" name="hora" class="form-control" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="especialista" class="form-label">Especialista <span style="color: red;">*</span></label>
+                                <select id="especialista" name="especialista" class="form-select" required>
+                                    <option value="">Seleccionar</option>
+                                    <option value="Dr. Martínez">Dr. Martínez</option>
+                                    <option value="Dra. Pérez">Dra. Pérez</option>
+                                    <option value="Dr. González">Dr. González</option>
+                                    <option value="Dra. Rodríguez">Dra. Rodríguez</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center mt-3">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-calendar-plus me-2"></i>Reservar hora
+                            </button>
+                        </div>
   </form>
+                </div>
+                
+                <!-- Historial de atenciones -->
+                <div class="mt-5">
+                    <h5><i class="fas fa-history me-2"></i>Historial de Atenciones</h5>
+                    <div class="table-responsive mt-3">
+                        <table class="table table-bordered table-striped">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Especialista</th>
+                                    <th>Diagnóstico</th>
+                                    <th>Tratamiento</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>15/08/2025</td>
+                                    <td>Dr. Martínez</td>
+                                    <td>Control rutinario</td>
+                                    <td>Sin medicamentos</td>
+                                    <td><span class="badge bg-success">Completado</span></td>
+                                </tr>
+                                <tr>
+                                    <td>10/07/2025</td>
+                                    <td>Dra. Pérez</td>
+                                    <td>Resfriado común</td>
+                                    <td>Reposo y líquidos</td>
+                                    <td><span class="badge bg-success">Completado</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .perfil-title {
+        color: var(--color-primary);
+        font-size: 2.5rem;
+        font-weight: var(--font-weight-bold);
+        margin-bottom: 2rem;
+    }
+    
+    .perfil-subtitle {
+        color: var(--color-primary);
+        font-size: 1.5rem;
+        font-weight: var(--font-weight-semibold);
+        border-bottom: 2px solid var(--color-primary);
+        padding-bottom: 0.5rem;
+    }
+    
+    .box {
+        background: white;
+        border-radius: var(--border-radius-lg);
+        transition: all var(--transition-normal);
+    }
+    
+    .box:hover {
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .btn-primary {
+        background-color: var(--color-primary);
+        border-color: var(--color-primary);
+        font-weight: var(--font-weight-semibold);
+        transition: all var(--transition-normal);
+    }
+    
+    .btn-primary:hover {
+        background-color: #369d65;
+        border-color: #369d65;
+        transform: translateY(-2px);
+    }
+    
+    .btn-success {
+        background-color: var(--color-primary);
+        border-color: var(--color-primary);
+    }
+    
+    .btn-success:hover {
+        background-color: #369d65;
+        border-color: #369d65;
+    }
+    
+    .form-control, .form-select {
+        border: 2px solid #e9ecef;
+        border-radius: var(--border-radius-md);
+        padding: 0.75rem 1rem;
+        transition: all var(--transition-normal);
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 0.2rem rgba(65, 191, 120, 0.25);
+    }
+    
+    .form-check-input:checked {
+        background-color: var(--color-primary);
+        border-color: var(--color-primary);
+    }
+    
+    .table-dark {
+        background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+    }
+    
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(65, 191, 120, 0.05);
+    }
+    
+    .badge {
+        font-size: 0.875rem;
+        padding: 0.5rem 0.75rem;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .perfil-title {
+            font-size: 2rem;
+        }
+        
+        .d-flex.gap-3 {
+            flex-direction: column;
+            gap: 1rem !important;
+        }
+        
+        .btn {
+            width: 100%;
+        }
+        
+        .row.g-3 .col-md-4 {
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/paciente.js' %}"></script>
+<script>
+    // Alternancia automática de secciones
+    const collapseElements = document.querySelectorAll('.collapse');
+    collapseElements.forEach(el => {
+        el.addEventListener('show.bs.collapse', function () {
+            collapseElements.forEach(other => {
+                if (other !== el) {
+                    bootstrap.Collapse.getInstance(other)?.hide();
+                }
+            });
+        });
+    });
+    
+    // Funcionalidad para botones de la tabla de reservas
+    document.addEventListener('click', function(e) {
+        const target = e.target.closest('button');
+        if (!target) return;
+        
+        const title = target.getAttribute('title');
+        const row = target.closest('tr');
+        
+        switch (title) {
+            case 'Editar':
+                editReservation(row);
+                break;
+            case 'Eliminar':
+                deleteReservation(row);
+                break;
+        }
+    });
+    
+    function editReservation(row) {
+        const fecha = row.cells[0].textContent;
+        const hora = row.cells[1].textContent;
+        const especialista = row.cells[2].textContent;
+        
+        // Llenar el formulario con los datos existentes
+        const form = document.querySelector('#reservasHistorial form');
+        const fechaInput = form.querySelector('input[type="date"]');
+        const horaInput = form.querySelector('input[type="time"]');
+        const especialistaSelect = form.querySelector('select');
+        
+        if (fechaInput) fechaInput.value = convertDateFormat(fecha);
+        if (horaInput) horaInput.value = hora;
+        if (especialistaSelect) especialistaSelect.value = especialista;
+        
+        // Scroll al formulario
+        form.scrollIntoView({ behavior: 'smooth' });
+        
+        showInfoMessage('Datos cargados para edición');
+    }
+    
+    function deleteReservation(row) {
+        const fecha = row.cells[0].textContent;
+        const especialista = row.cells[2].textContent;
+        
+        const message = `¿Estás seguro de que quieres cancelar la cita con ${especialista} del ${fecha}?`;
+        
+        if (confirm(message)) {
+            showLoading('Cancelando cita...');
+            
+            setTimeout(() => {
+                hideLoading();
+                row.remove();
+                showSuccessMessage('Cita cancelada correctamente');
+            }, 1000);
+        }
+    }
+    
+    function convertDateFormat(dateString) {
+        // Convertir de dd/mm/yyyy a yyyy-mm-dd
+        const parts = dateString.split('/');
+        if (parts.length === 3) {
+            return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+        }
+        return dateString;
+    }
+    
+    function showLoading(message = 'Procesando...') {
+        const submitBtn = document.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin me-2"></i>${message}`;
+            submitBtn.dataset.originalText = originalText;
+        }
+    }
+    
+    function hideLoading() {
+        const submitBtn = document.querySelector('button[type="submit"]');
+        if (submitBtn && submitBtn.dataset.originalText) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = submitBtn.dataset.originalText;
+            delete submitBtn.dataset.originalText;
+        }
+    }
+    
+    function showSuccessMessage(message) {
+        if (window.Mediconecta) {
+            window.Mediconecta.showAlert(message, 'success');
+        }
+    }
+    
+    function showInfoMessage(message) {
+        if (window.Mediconecta) {
+            window.Mediconecta.showAlert(message, 'info');
+        }
+    }
+</script>
 {% endblock %}

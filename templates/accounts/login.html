@@ -1,11 +1,137 @@
 {% extends 'base.html' %}
-{% block title %}Entrar · Mediconecta{% endblock %}
+{% load static %}
+{% block title %}Iniciar Sesión · Mediconecta{% endblock %}
 {% block content %}
-  <h2>Entrar</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Iniciar sesión</button>
-  </form>
-  <p>¿No tienes cuenta? <a href="{% url 'accounts:register' %}">Regístrate</a></p>
+    <!-- Contenedor que fuerza la visibilidad del footer -->
+    <div class="force-footer-visible">
+        <div class="content-wrapper">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="login-box shadow p-4 rounded">
+                            <h1>Bienvenido</h1>
+                            <h2>Ingrese su correo y contraseña</h2>
+                    
+                            <form method="post" novalidate>
+                                {% csrf_token %}
+                                
+                                <!-- Correo electrónico -->
+                                <div class="mb-3">
+                                    <label for="{{ form.username.id_for_label }}" class="form-label">Correo electrónico: <span style="color:red">*</span></label>
+                                    {{ form.username }}
+                                    {% if form.username.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.username.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                    
+                                <!-- Contraseña -->
+                                <div class="mb-3">
+                                    <label for="{{ form.password.id_for_label }}" class="form-label">Contraseña: <span style="color:red">*</span></label>
+                                    {{ form.password }}
+                                    {% if form.password.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.password.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                    
+                                <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
+                                <a href="{% url 'accounts:password_reset' %}" class="forgot-password">¿Olvidó la contraseña?</a>
+                            </form>
+                            
+                            <div class="text-center mt-3">
+                                <p>¿No tienes cuenta? <a href="{% url 'accounts:register' %}">Regístrate</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .login-box {
+        background: white;
+        border-radius: 1rem;
+        max-width: 400px;
+        width: 100%;
+    }
+    
+    .login-box h1 {
+        color: #41BF78;
+        font-size: 2rem;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+    
+    .login-box h2 {
+        color: #A0D8EF;
+        font-size: 1.1rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        font-weight: normal;
+    }
+    
+    .login-box .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+    }
+    
+    .login-box .form-control:focus {
+        border-color: #41BF78;
+        box-shadow: 0 0 0 0.2rem rgba(65, 191, 120, 0.25);
+    }
+    
+    .login-box .btn-primary {
+        background-color: #41BF78;
+        border-color: #41BF78;
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    
+    .login-box .btn-primary:hover {
+        background-color: #369d65;
+        border-color: #369d65;
+    }
+    
+    .forgot-password {
+        color: #6c757d;
+        text-decoration: none;
+        font-size: 0.9rem;
+        display: block;
+        text-align: center;
+        margin-top: 1rem;
+    }
+    
+    .forgot-password:hover {
+        color: #41BF78;
+        text-decoration: underline;
+    }
+    
+    .invalid-feedback {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+    
+    /* Asegurar que los campos de formulario de Django tengan las clases correctas */
+    .login-box input[type="text"],
+    .login-box input[type="email"],
+    .login-box input[type="password"] {
+        width: 100%;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/login.js' %}"></script>
 {% endblock %}

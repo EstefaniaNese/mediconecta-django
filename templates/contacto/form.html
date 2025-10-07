@@ -1,10 +1,228 @@
 {% extends 'base.html' %}
-{% block title %}Contacto · Mediconecta{% endblock %}
+{% load static %}
+{% block title %}Contacto y Soporte · Mediconecta{% endblock %}
 {% block content %}
-  <h2>Contacto</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Enviar</button>
-  </form>
+    <!-- Banner de contacto -->
+    <section class="category-banner position-relative text-center text-white mb-5">
+        <!-- Imagen de fondo -->
+        <img src="{% static 'images/bannerContacto.avif' %}" alt="Banner contacto" 
+            class="w-100 h-100 object-fit-cover position-absolute top-0 start-0" 
+            style="z-index: -2; filter: brightness(0.6);">
+        
+        <!-- Overlay con gradiente suave -->
+        <div class="banner-overlay position-absolute top-0 start-0 w-100 h-100" 
+            style="z-index: -1; background: linear-gradient(135deg, rgba(4, 119, 191, 0.85) 0%, rgba(65, 191, 120, 0.6) 50%, rgba(242, 242, 242, 0.5) 100%);">
+        </div>
+        
+        <div class="container py-5" style="margin-top: 150px;">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="display-3 fw-bold mb-4" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.3); color: white;">
+                        <i class="fas fa-headset me-3"></i>Contacto y Soporte
+                    </h1>
+                    <p class="lead fs-4" style="text-shadow: 1px 1px 4px rgba(0,0,0,0.5);">¿Necesitas ayuda? Estamos aquí para asistirte</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contenido de contacto -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-lg">
+                        <div class="card-body p-5">
+                            <!-- ¿Necesitas ayuda? -->
+                            <div class="mb-5">
+                                <h2 class="h4 text-custom-primary mb-3">
+                                    <i class="fas fa-question-circle me-2"></i>¿Necesitas ayuda?
+                                </h2>
+                                <p class="text-muted">Si tienes algún problema o necesitas más información, no dudes en contactarnos a través de nuestro <a href="mailto:mediconecta@duocuc.cl" class="text-decoration-none">correo electrónico</a>.</p>
+                            </div>
+
+                            <!-- Teléfono -->
+                            <div class="mb-5">
+                                <h2 class="h4 text-custom-primary mb-3">
+                                    <i class="fas fa-phone me-2"></i>Teléfono
+                                </h2>
+                                <p class="text-muted">También puedes llamarnos al número: <strong class="text-custom-secondary">+56 9 876 543 21</strong></p>
+                            </div>
+
+                            <!-- Redes Sociales -->
+                            <div class="mb-5">
+                                <h2 class="h4 text-custom-primary mb-3">
+                                    <i class="fas fa-share-alt me-2"></i>Redes Sociales
+                                </h2>
+                                <p class="text-muted mb-3">Visítanos en nuestras redes sociales para estar al tanto de las últimas novedades y promociones:</p>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <a href="https://www.facebook.com/mediconecta" class="btn btn-social facebook">
+                                        <i class="fab fa-facebook me-2"></i>Facebook
+                                    </a>
+                                    <a href="https://www.instagram.com/mediconecta" class="btn btn-social instagram">
+                                        <i class="fab fa-instagram me-2"></i>Instagram
+                                    </a>
+                                    <a href="https://www.twitter.com/mediconecta" class="btn btn-social twitter">
+                                        <i class="fab fa-twitter me-2"></i>Twitter
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Formulario de contacto -->
+                            <div class="mb-5">
+                                <h2 class="h4 text-custom-primary mb-3">
+                                    <i class="fas fa-envelope me-2"></i>Envíanos un mensaje
+                                </h2>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="{{ form.nombre.id_for_label }}" class="form-label">Nombre: <span style="color:red">*</span></label>
+                                                {{ form.nombre }}
+                                                {% if form.nombre.errors %}
+                                                    <div class="invalid-feedback d-block">
+                                                        {{ form.nombre.errors.0 }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="{{ form.email.id_for_label }}" class="form-label">Correo electrónico: <span style="color:red">*</span></label>
+                                                {{ form.email }}
+                                                {% if form.email.errors %}
+                                                    <div class="invalid-feedback d-block">
+                                                        {{ form.email.errors.0 }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.asunto.id_for_label }}" class="form-label">Asunto: <span style="color:red">*</span></label>
+                                        {{ form.asunto }}
+                                        {% if form.asunto.errors %}
+                                            <div class="invalid-feedback d-block">
+                                                {{ form.asunto.errors.0 }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="{{ form.mensaje.id_for_label }}" class="form-label">Mensaje: <span style="color:red">*</span></label>
+                                        {{ form.mensaje }}
+                                        {% if form.mensaje.errors %}
+                                            <div class="invalid-feedback d-block">
+                                                {{ form.mensaje.errors.0 }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-paper-plane me-2"></i>Enviar mensaje
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- Mensaje de ayuda -->
+                            <div class="text-center">
+                                <p class="h5 text-custom-primary mb-0">
+                                    <i class="fas fa-heart me-2"></i>¡Estamos aquí para ayudarte!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .text-custom-primary {
+        color: #41BF78 !important;
+    }
+    
+    .text-custom-secondary {
+        color: #A0D8EF !important;
+    }
+    
+    .btn-social {
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-social.facebook {
+        background-color: #1877f2;
+        color: white;
+        border: 1px solid #1877f2;
+    }
+    
+    .btn-social.facebook:hover {
+        background-color: #166fe5;
+        color: white;
+    }
+    
+    .btn-social.instagram {
+        background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+        color: white;
+        border: none;
+    }
+    
+    .btn-social.instagram:hover {
+        opacity: 0.9;
+        color: white;
+    }
+    
+    .btn-social.twitter {
+        background-color: #1da1f2;
+        color: white;
+        border: 1px solid #1da1f2;
+    }
+    
+    .btn-social.twitter:hover {
+        background-color: #1a91da;
+        color: white;
+    }
+    
+    .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+    }
+    
+    .form-control:focus {
+        border-color: #41BF78;
+        box-shadow: 0 0 0 0.2rem rgba(65, 191, 120, 0.25);
+    }
+    
+    .btn-primary {
+        background-color: #41BF78;
+        border-color: #41BF78;
+        border-radius: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+    }
+    
+    .btn-primary:hover {
+        background-color: #369d65;
+        border-color: #369d65;
+    }
+    
+    .invalid-feedback {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+    
+    /* Asegurar que los campos de formulario de Django tengan las clases correctas */
+    input[type="text"],
+    input[type="email"],
+    textarea {
+        width: 100%;
+    }
+</style>
 {% endblock %}

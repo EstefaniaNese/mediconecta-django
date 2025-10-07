@@ -1,10 +1,475 @@
 {% extends 'base.html' %}
-{% block title %}Médico · Mediconecta{% endblock %}
+{% load static %}
+{% block title %}Perfil de Médico · Mediconecta{% endblock %}
 {% block content %}
-  <h2>Panel de Médico</h2>
-  <form method="post">
+    <main class="container mt-5 pt-5">
+        <h1 class="perfil-title text-center mb-5 mt-5">Bienvenido, Dr. Carlos Rodríguez</h1>
+
+        <!-- Botones para alternar secciones -->
+        <div class="d-flex justify-content-center mb-5 gap-3 flex-wrap">
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#editarPerfil" aria-expanded="false" aria-controls="editarPerfil">
+                <i class="fas fa-user-edit me-2"></i>Editar Perfil
+            </button>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#atencionesHistorial" aria-expanded="false" aria-controls="atencionesHistorial">
+                <i class="fas fa-history me-2"></i>Historial de Atenciones
+            </button>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#atencionesPendientes" aria-expanded="true" aria-controls="atencionesPendientes">
+                <i class="fas fa-clipboard-list me-2"></i>Atenciones Pendientes
+            </button>
+        </div>
+
+        <!-- Sección Editar Perfil -->
+        <div class="collapse" id="editarPerfil">
+            <div class="box shadow p-4 rounded mb-4">
+                <h2 class="perfil-subtitle mb-3">Editar Perfil Profesional</h2>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <!-- Nombre -->
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre completo: <span style="color: red;">*</span></label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required autocomplete="off">
+                    </div>
+
+                    <!-- Especialidad -->
+                    <div class="mb-3">
+                        <label for="especialidad" class="form-label">Especialidad: <span style="color: red;">*</span></label>
+                        <select class="form-select" id="especialidad" name="especialidad" required>
+                            <option value="">Seleccione...</option>
+                            <option value="medicina-general">Medicina General</option>
+                            <option value="cardiologia">Cardiología</option>
+                            <option value="pediatria">Pediatría</option>
+                            <option value="neurologia">Neurología</option>
+                            <option value="dermatologia">Dermatología</option>
+                        </select>
+                    </div>
+
+                    <!-- Número de registro -->
+                    <div class="mb-3">
+                        <label for="registro" class="form-label">Número de registro médico: <span style="color: red;">*</span></label>
+                        <input type="text" class="form-control" id="registro" name="registro" required autocomplete="off">
+                    </div>
+
+                    <!-- Años de experiencia -->
+                    <div class="mb-3">
+                        <label for="experiencia" class="form-label">Años de experiencia: <span style="color: red;">*</span></label>
+                        <input type="number" class="form-control" id="experiencia" name="experiencia" min="0" required autocomplete="off">
+                    </div>
+
+                    <!-- Disponibilidad -->
+                    <div class="mb-3">
+                        <label class="form-label">Días de atención: <span style="color: red;">*</span></label>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="lunes" id="dia-lunes">
+                                    <label class="form-check-label" for="dia-lunes">Lunes</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="martes" id="dia-martes">
+                                    <label class="form-check-label" for="dia-martes">Martes</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="miercoles" id="dia-miercoles">
+                                    <label class="form-check-label" for="dia-miercoles">Miércoles</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="jueves" id="dia-jueves">
+                                    <label class="form-check-label" for="dia-jueves">Jueves</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="viernes" id="dia-viernes">
+                                    <label class="form-check-label" for="dia-viernes">Viernes</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="sabado" id="dia-sabado">
+                                    <label class="form-check-label" for="dia-sabado">Sábado</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Valor de consulta -->
+                    <div class="mb-3">
+                        <label for="valor" class="form-label">Valor de consulta (CLP): <span style="color: red;">*</span></label>
+                        <input type="number" class="form-control" id="valor" name="valor" min="0" required autocomplete="off">
+                    </div>
+
+                    <!-- Correo electrónico -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Correo Electrónico: <span style="color: red;">*</span></label>
+                        <input type="email" class="form-control" id="email" name="email" required autocomplete="off">
+                    </div>
+
+                    <!-- Contraseña -->
+                    <div class="mb-3">
+                        <label for="contrasena" class="form-label">Contraseña: <span style="color: red;">*</span></label>
+                        <input type="password" class="form-control" id="contrasena" name="contrasena" required autocomplete="off">
+                    </div>
+
+                    <!-- Confirmar contraseña -->
+                    <div class="mb-3">
+                        <label for="confirmarContrasena" class="form-label">Confirme la contraseña: <span style="color: red;">*</span></label>
+                        <input type="password" class="form-control" id="confirmarContrasena" name="confirmarContrasena" required autocomplete="off">
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="d-flex justify-content-center gap-5 mt-4">
+                        <button type="reset" class="btn btn-primary">Limpiar</button>
+                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Sección Historial de Atenciones -->
+        <div class="collapse" id="atencionesHistorial">
+            <div class="box shadow p-4 rounded mb-4">
+                <h2 class="perfil-subtitle mb-3">Historial de Atenciones Realizadas</h2>
+                <p>Aquí puede visualizar todas las atenciones médicas que ha realizado.</p>
+                
+                <!-- Filtros -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="filtroFecha" class="form-label">Filtrar por fecha:</label>
+                        <input type="date" class="form-control" id="filtroFecha">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="filtroPaciente" class="form-label">Buscar paciente:</label>
+                        <input type="text" class="form-control" id="filtroPaciente" placeholder="Nombre del paciente">
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button class="btn btn-primary w-100">
+                            <i class="fas fa-search me-2"></i>Buscar
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Tabla de historial -->
+                <div class="table-responsive mt-3">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Paciente</th>
+                                <th>Patología</th>
+                                <th>Tratamiento</th>
+                                <th>Valor</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>15/08/2025</td>
+                                <td>María González</td>
+                                <td>Hipertensión</td>
+                                <td>Enalapril 10mg</td>
+                                <td>$35.000</td>
+                                <td>
+                                    <button class="btn btn-sm btn-info" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    <button class="btn btn-sm btn-success" title="Editar"><i class="fas fa-edit"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>12/08/2025</td>
+                                <td>Pedro Soto</td>
+                                <td>Diabetes tipo 2</td>
+                                <td>Metformina 850mg</td>
+                                <td>$35.000</td>
+                                <td>
+                                    <button class="btn btn-sm btn-info" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    <button class="btn btn-sm btn-success" title="Editar"><i class="fas fa-edit"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección Atenciones Pendientes -->
+        <div class="collapse show" id="atencionesPendientes">
+            <div class="box shadow p-4 rounded mb-4">
+                <h2 class="perfil-subtitle mb-3">Atenciones Pendientes</h2>
+                <p>Aquí puede visualizar los pacientes agendados para atención médica.</p>
+                
+                <!-- Tabla de atenciones pendientes -->
+                <div class="table-responsive mt-3">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Paciente</th>
+                                <th>Patología</th>
+                                <th>Valor consulta</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>20/09/2025</td>
+                                <td>09:30</td>
+                                <td>Ana Martínez</td>
+                                <td>Migraña crónica</td>
+                                <td>$45.000</td>
+                                <td>
+                                    <button class="btn btn-sm btn-success" title="Atender"><i class="fas fa-user-md"></i></button>
+                                    <button class="btn btn-sm btn-warning" title="Reprogramar"><i class="fas fa-calendar-alt"></i></button>
+                                    <button class="btn btn-sm btn-danger" title="Cancelar"><i class="fas fa-times"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>20/09/2025</td>
+                                <td>10:15</td>
+                                <td>Roberto Gómez</td>
+                                <td>Lumbalgia</td>
+                                <td>$35.000</td>
+                                <td>
+                                    <button class="btn btn-sm btn-success" title="Atender"><i class="fas fa-user-md"></i></button>
+                                    <button class="btn btn-sm btn-warning" title="Reprogramar"><i class="fas fa-calendar-alt"></i></button>
+                                    <button class="btn btn-sm btn-danger" title="Cancelar"><i class="fas fa-times"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>20/09/2025</td>
+                                <td>11:00</td>
+                                <td>Carmen Vega</td>
+                                <td>Hipertensión arterial</td>
+                                <td>$40.000</td>
+                                <td>
+                                    <button class="btn btn-sm btn-success" title="Atender"><i class="fas fa-user-md"></i></button>
+                                    <button class="btn btn-sm btn-warning" title="Reprogramar"><i class="fas fa-calendar-alt"></i></button>
+                                    <button class="btn btn-sm btn-danger" title="Cancelar"><i class="fas fa-times"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Formulario para registrar atención -->
+                <div class="mt-4">
+                    <h5><i class="fas fa-notes-medical me-2"></i>Registrar atención médica</h5>
+                    <form method="post" class="mt-3">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Guardar</button>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="pacienteAtencion" class="form-label">Paciente</label>
+                                <select id="pacienteAtencion" class="form-select" required>
+                                    <option value="">Seleccionar paciente...</option>
+                                    <option>Ana Martínez</option>
+                                    <option>Roberto Gómez</option>
+                                    <option>Carmen Vega</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="diagnostico" class="form-label">Diagnóstico</label>
+                                <input type="text" id="diagnostico" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="tratamiento" class="form-label">Tratamiento</label>
+                                <input type="text" id="tratamiento" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="observaciones" class="form-label">Observaciones</label>
+                                <textarea id="observaciones" class="form-control" rows="2"></textarea>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center mt-3">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Guardar atención
+                            </button>
+                        </div>
   </form>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .perfil-title {
+        color: var(--color-primary);
+        font-size: 2.5rem;
+        font-weight: var(--font-weight-bold);
+        margin-bottom: 2rem;
+    }
+    
+    .perfil-subtitle {
+        color: var(--color-primary);
+        font-size: 1.5rem;
+        font-weight: var(--font-weight-semibold);
+        border-bottom: 2px solid var(--color-primary);
+        padding-bottom: 0.5rem;
+    }
+    
+    .box {
+        background: white;
+        border-radius: var(--border-radius-lg);
+        transition: all var(--transition-normal);
+    }
+    
+    .box:hover {
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .btn-primary {
+        background-color: var(--color-primary);
+        border-color: var(--color-primary);
+        font-weight: var(--font-weight-semibold);
+        transition: all var(--transition-normal);
+    }
+    
+    .btn-primary:hover {
+        background-color: #369d65;
+        border-color: #369d65;
+        transform: translateY(-2px);
+    }
+    
+    .btn-success {
+        background-color: var(--color-primary);
+        border-color: var(--color-primary);
+    }
+    
+    .btn-success:hover {
+        background-color: #369d65;
+        border-color: #369d65;
+    }
+    
+    .btn-info {
+        background-color: var(--color-secondary);
+        border-color: var(--color-secondary);
+    }
+    
+    .btn-info:hover {
+        background-color: #8bc5d6;
+        border-color: #8bc5d6;
+    }
+    
+    .form-control, .form-select {
+        border: 2px solid #e9ecef;
+        border-radius: var(--border-radius-md);
+        padding: 0.75rem 1rem;
+        transition: all var(--transition-normal);
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 0.2rem rgba(65, 191, 120, 0.25);
+    }
+    
+    .form-check-input:checked {
+        background-color: var(--color-primary);
+        border-color: var(--color-primary);
+    }
+    
+    .table-dark {
+        background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+    }
+    
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(65, 191, 120, 0.05);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .perfil-title {
+            font-size: 2rem;
+        }
+        
+        .d-flex.gap-3 {
+            flex-direction: column;
+            gap: 1rem !important;
+        }
+        
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Alternancia automática de secciones
+    const collapseElements = document.querySelectorAll('.collapse');
+    collapseElements.forEach(el => {
+        el.addEventListener('show.bs.collapse', function () {
+            collapseElements.forEach(other => {
+                if (other !== el) {
+                    bootstrap.Collapse.getInstance(other)?.hide();
+                }
+            });
+        });
+    });
+    
+    // Funcionalidad para botones de la tabla
+    document.addEventListener('click', function(e) {
+        const target = e.target.closest('button');
+        if (!target) return;
+        
+        const title = target.getAttribute('title');
+        const row = target.closest('tr');
+        
+        switch (title) {
+            case 'Ver detalles':
+                showPatientDetails(row);
+                break;
+            case 'Editar':
+                editPatientRecord(row);
+                break;
+            case 'Atender':
+                attendPatient(row);
+                break;
+            case 'Reprogramar':
+                rescheduleAppointment(row);
+                break;
+            case 'Cancelar':
+                cancelAppointment(row);
+                break;
+        }
+    });
+    
+    function showPatientDetails(row) {
+        const paciente = row.cells[2].textContent;
+        alert(`Mostrar detalles de ${paciente}`);
+    }
+    
+    function editPatientRecord(row) {
+        const paciente = row.cells[1].textContent;
+        alert(`Editar registro de ${paciente}`);
+    }
+    
+    function attendPatient(row) {
+        const paciente = row.cells[2].textContent;
+        if (confirm(`¿Iniciar atención de ${paciente}?`)) {
+            // Lógica para iniciar atención
+            showAlert('Iniciando atención médica...', 'info');
+        }
+    }
+    
+    function rescheduleAppointment(row) {
+        const paciente = row.cells[2].textContent;
+        alert(`Reprogramar cita de ${paciente}`);
+    }
+    
+    function cancelAppointment(row) {
+        const paciente = row.cells[2].textContent;
+        if (confirm(`¿Cancelar cita de ${paciente}?`)) {
+            row.remove();
+            showAlert('Cita cancelada', 'success');
+        }
+    }
+    
+    function showAlert(message, type) {
+        if (window.Mediconecta) {
+            window.Mediconecta.showAlert(message, type);
+        }
+    }
+</script>
 {% endblock %}
