@@ -11,7 +11,6 @@ from .serializers import PacienteSerializer, PacienteListSerializer
 class PacienteViewSet(viewsets.ModelViewSet):
     """
     ViewSet para gestionar pacientes.
-    Soporta autenticación por token JWT y sesión.
     """
     queryset = Paciente.objects.all()
     permission_classes = [IsAuthenticated]

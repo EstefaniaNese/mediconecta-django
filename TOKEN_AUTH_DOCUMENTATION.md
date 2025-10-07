@@ -2,7 +2,7 @@
 
 ## Autenticación JWT Implementada
 
-La aplicación ahora soporta **autenticación basada en token JWT** para todas las APIs REST, proporcionando una forma segura y escalable de autenticación.
+La aplicación soporta **autenticación basada en token JWT** para todas las APIs REST, proporcionando una forma segura y escalable de autenticación.
 
 ## Endpoints de Autenticación
 
@@ -234,7 +234,7 @@ curl -X POST "http://localhost:8000/api/auth/token/refresh/" \
 
 ## Seguridad Implementada
 
-### ✅ Características de Seguridad
+### Características de Seguridad
 
 1. **Tokens JWT firmados** con clave secreta
 2. **Expiración automática** de tokens
@@ -244,17 +244,13 @@ curl -X POST "http://localhost:8000/api/auth/token/refresh/" \
 6. **Información del usuario** en el token
 7. **Manejo seguro de errores**
 
-### ✅ APIs Protegidas
-
-Todas las APIs REST propias están protegidas:
+### APIs Protegidas
 
 - **API de Médicos:** `/medicos/api/`
 - **API de Pacientes:** `/pacientes/api/`
 - **API de Especialidades:** `/medicos/api/especialidades/`
 
-### ✅ Endpoints Públicos
-
-Los siguientes endpoints no requieren autenticación:
+### Endpoints Públicos
 
 - **Registro:** `/api/auth/register/`
 - **Login:** `/api/auth/token/`
@@ -282,74 +278,3 @@ Los siguientes endpoints no requieren autenticación:
     "detail": "Authentication credentials were not provided."
 }
 ```
-
-## Mejores Prácticas
-
-### 1. Almacenamiento de Tokens
-- **Access Token:** Almacenar en memoria (no persistir)
-- **Refresh Token:** Almacenar de forma segura (localStorage con HTTPS)
-
-### 2. Renovación Automática
-- Renovar tokens antes de que expiren
-- Usar refresh token para obtener nuevo access token
-
-### 3. Manejo de Errores
-- Verificar códigos de estado HTTP
-- Manejar tokens expirados automáticamente
-
-### 4. Seguridad
-- Usar HTTPS en producción
-- No exponer tokens en logs
-- Implementar rate limiting
-
-## Ejemplo de Cliente JavaScript
-
-```javascript
-// Configurar token
-const token = localStorage.getItem('access_token');
-const headers = {
-    'Authorization': `Bearer ${token}`,
-    'Content-Type': 'application/json'
-};
-
-// Hacer request
-fetch('/medicos/api/medicos/', {
-    method: 'GET',
-    headers: headers
-})
-.then(response => {
-    if (response.status === 401) {
-        // Token expirado, renovar
-        return refreshToken();
-    }
-    return response.json();
-})
-.then(data => console.log(data));
-
-// Función para renovar token
-function refreshToken() {
-    const refreshToken = localStorage.getItem('refresh_token');
-    return fetch('/api/auth/token/refresh/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refresh: refreshToken })
-    })
-    .then(response => response.json())
-    .then(data => {
-        localStorage.setItem('access_token', data.access);
-        // Reintentar request original
-    });
-}
-```
-
-## Conclusión
-
-La implementación de autenticación por token JWT proporciona:
-
-- ✅ **Seguridad robusta** con tokens firmados
-- ✅ **Escalabilidad** para aplicaciones cliente
-- ✅ **Flexibilidad** para diferentes tipos de clientes
-- ✅ **Manejo automático** de expiración y renovación
-- ✅ **Compatibilidad** con estándares JWT
-
-Todas las APIs REST propias ahora soportan autenticación por token de forma segura y eficiente.

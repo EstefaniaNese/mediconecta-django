@@ -77,7 +77,6 @@ class MedicoViewSet(viewsets.ModelViewSet):
 class EspecialidadViewSet(viewsets.ReadOnlyModelViewSet):
     """
     ViewSet de solo lectura para especialidades médicas.
-    Soporta autenticación por token JWT y sesión.
     """
     queryset = Especialidad.objects.all()
     serializer_class = EspecialidadSerializer
