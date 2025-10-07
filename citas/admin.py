@@ -7,6 +7,14 @@ class ReservaAdmin(admin.ModelAdmin):
     list_filter = ('estado', 'fecha', 'medico')
     search_fields = ('paciente__user__username', 'medico__user__username', 'motivo')
     date_hierarchy = 'fecha'
+    actions = ['eliminar_reservas_seleccionadas']
+    
+    def eliminar_reservas_seleccionadas(self, request, queryset):
+        """Acción personalizada para eliminar reservas"""
+        count = queryset.count()
+        queryset.delete()
+        self.message_user(request, f'{count} reserva(s) eliminada(s) exitosamente.')
+    eliminar_reservas_seleccionadas.short_description = "Eliminar reservas seleccionadas"
 
 @admin.register(HistorialMedico)
 class HistorialMedicoAdmin(admin.ModelAdmin):
