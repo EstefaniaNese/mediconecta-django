@@ -26,7 +26,6 @@ RUN chown -R appuser:appuser /app
 USER appuser
 
 EXPOSE 8000
-ENV PORT=8000
 
-# Railway will use the startCommand from railway.json
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Simple CMD - Railway will override with startCommand
+CMD ["python", "manage.py", "runserver", "0.0.0.0:$PORT"]
