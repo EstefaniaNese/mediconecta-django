@@ -9,7 +9,7 @@ python manage.py collectstatic --noinput || true
 
 # Ejecutar migraciones
 echo "Ejecutando migraciones..."
-python manage.py migrate
+python manage.py migrate --run-syncdb || echo "Error en migraciones, continuando..."
 
 # Crear superusuario automáticamente si las variables están configuradas
 if [ -n "$DJANGO_SUPERUSER_USERNAME" ] && [ -n "$DJANGO_SUPERUSER_PASSWORD" ] && [ -n "$DJANGO_SUPERUSER_EMAIL" ]; then
