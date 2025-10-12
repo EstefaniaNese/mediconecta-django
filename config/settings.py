@@ -20,6 +20,14 @@ if not DEBUG:
         "https://mediconecta-django-production.up.railway.app",
         "https://*.railway.app",
     ])
+    # Configuración de cookies seguras para producción
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = False  # Railway maneja SSL, no necesitamos redirect
+else:
+    # En desarrollo (HTTP), las cookies no deben ser seguras
+    CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = False
 
 
 INSTALLED_APPS = [
