@@ -8,7 +8,14 @@ load_dotenv(BASE_DIR / ".env")
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "unsafe-secret-key")
 DEBUG = os.getenv("DJANGO_DEBUG", "0") == "1"
-ALLOWED_HOSTS = [h.strip() for h in os.getenv("DJANGO_ALLOWED_HOSTS", "mediconecta-django-production.up.railway.app,*.railway.app").split(",")]
+
+# ALLOWED_HOSTS configuration
+allowed_hosts_str = os.getenv("DJANGO_ALLOWED_HOSTS", "mediconecta-django-production.up.railway.app,*.railway.app")
+ALLOWED_HOSTS = [h.strip() for h in allowed_hosts_str.split(",") if h.strip()]
+
+# Log configuration for debugging
+print(f"[INFO] DEBUG mode: {DEBUG}")
+print(f"[INFO] ALLOWED_HOSTS: {ALLOWED_HOSTS}")
 
 # Configuración CSRF para producción
 CSRF_TRUSTED_ORIGINS = [

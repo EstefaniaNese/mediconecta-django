@@ -1,5 +1,18 @@
 # Guía de Despliegue en Railway
 
+## 🚨 PROBLEMA CRÍTICO: Error de Conexión a Base de Datos
+
+Si estás viendo este error:
+```
+django.db.utils.OperationalError: could not translate host name "postgres.railway.internal" to address: Name or service not known
+```
+
+**👉 VE INMEDIATAMENTE A: `RAILWAY_DATABASE_FIX.md`**
+
+Este archivo contiene la solución completa paso a paso para resolver el problema de conexión a PostgreSQL.
+
+---
+
 ## 📋 Cambios Realizados para Solucionar Error 500
 
 ### 1. Configuración de CSRF y Cookies Seguras
