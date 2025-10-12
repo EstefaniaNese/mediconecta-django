@@ -23,4 +23,5 @@ RUN chown -R appuser:appuser /app
 USER appuser
 
 EXPOSE 8000
+ENV PORT=8000
 CMD ["/bin/bash", "entrypoint.sh"]
