@@ -7,6 +7,9 @@ from django.contrib.auth.views import LogoutView
 from django.views import View
 from django.urls import reverse_lazy
 from .forms import RegisterForm, CustomLoginForm
+import logging
+
+logger = logging.getLogger(__name__)
 
 class CustomLoginView(View):
     """
@@ -22,34 +25,45 @@ class CustomLoginView(View):
     
     def post(self, request):
         """Procesa el formulario de login"""
-        form = self.form_class(request.POST)
-        
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
+        try:
+            form = self.form_class(request.POST)
             
-            # Autenticar usuario
-            user = authenticate(request, username=username, password=password)
-            
-            if user is not None:
-                login(request, user)
-                messages.success(
-                    request, 
-                    f'¡Bienvenido/a, {username}! Has iniciado sesión exitosamente.'
-                )
-                return redirect('core:index')
+            if form.is_valid():
+                username = form.cleaned_data['username']
+                password = form.cleaned_data['password']
+                
+                logger.info(f"Intento de login para usuario: {username}")
+                
+                # Autenticar usuario
+                user = authenticate(request, username=username, password=password)
+                
+                if user is not None:
+                    login(request, user)
+                    messages.success(
+                        request, 
+                        f'¡Bienvenido/a, {username}! Has iniciado sesión exitosamente.'
+                    )
+                    logger.info(f"Login exitoso para usuario: {username}")
+                    return redirect('core:index')
+                else:
+                    logger.warning(f"Login fallido para usuario: {username} - Credenciales inválidas")
+                    messages.error(
+                        request,
+                        'Credenciales incorrectas. Por favor, verifica tu nombre de usuario y contraseña.'
+                    )
             else:
-                messages.error(
-                    request,
-                    'Credenciales incorrectas. Por favor, verifica tu nombre de usuario y contraseña.'
-                )
-        else:
-            # Solo mostrar errores de campos obligatorios, no de email
-            for field, errors in form.errors.items():
-                if field == 'username' and any('correo' in str(error).lower() or 'email' in str(error).lower() for error in errors):
-                    form.errors[field] = ['Este campo es obligatorio.']
+                logger.warning(f"Formulario de login inválido: {form.errors}")
+                # Solo mostrar errores de campos obligatorios, no de email
+                for field, errors in form.errors.items():
+                    if field == 'username' and any('correo' in str(error).lower() or 'email' in str(error).lower() for error in errors):
+                        form.errors[field] = ['Este campo es obligatorio.']
+            
+            return render(request, self.template_name, {'form': form})
         
-        return render(request, self.template_name, {'form': form})
+        except Exception as e:
+            logger.error(f"Error inesperado en login: {type(e).__name__}: {str(e)}", exc_info=True)
+            messages.error(request, 'Ha ocurrido un error. Por favor, intenta nuevamente.')
+            return render(request, self.template_name, {'form': self.form_class()})
 
 class CustomLogoutView(LogoutView):
     """
