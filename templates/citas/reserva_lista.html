@@ -1,49 +1,361 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}Mis Reservas{% endblock %}
+{% block title %}Mis Citas · Mediconecta{% endblock %}
 
 {% block content %}
-<h1>Mis Reservas</h1>
+<div class="citas-page">
+    <!-- Header de la página con gradiente -->
+    <div class="page-header bg-gradient-custom text-white py-5 mb-4">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-4 fw-bold mb-2 fade-in">
+                        <i class="fas fa-calendar-check me-3"></i>Mis Citas
+                    </h1>
+                    <p class="lead mb-0 fade-in fade-in-delay-1">
+                        Gestiona tus citas médicas de manera fácil y rápida
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="{% url 'citas:reserva_crear' %}" class="btn btn-light btn-lg fade-in fade-in-delay-2">
+                        <i class="fas fa-plus me-2"></i>Nueva Cita
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<div class="actions">
-    <a href="{% url 'citas:reserva_crear' %}" class="btn btn-primary">Nueva Reserva</a>
-</div>
-
-{% if reservas %}
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Fecha</th>
-                <th>Hora</th>
-                <th>Médico/Paciente</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="container">
+    {% if reservas %}
+        <!-- Grid de tarjetas de citas -->
+        <div class="row g-4">
             {% for reserva in reservas %}
-            <tr>
-                <td>{{ reserva.fecha }}</td>
-                <td>{{ reserva.hora_inicio }} - {{ reserva.hora_fin }}</td>
-                <td>
-                    {% if user.paciente %}
-                        Dr. {{ reserva.medico }}
-                    {% else %}
-                        {{ reserva.paciente }}
-                    {% endif %}
-                </td>
-                <td>{{ reserva.get_estado_display }}</td>
-                <td>
-                    <a href="{% url 'citas:reserva_detalle' reserva.id %}" class="btn btn-sm btn-info">Ver</a>
-                    {% if reserva.puede_cancelar and user.paciente %}
-                        <a href="{% url 'citas:reserva_cancelar' reserva.id %}" class="btn btn-sm btn-danger">Cancelar</a>
-                    {% endif %}
-                </td>
-            </tr>
+            <div class="col-lg-6 col-xl-4">
+                <div class="card appointment-card h-100 shadow-sm border-0 fade-in">
+                    <div class="card-header bg-gradient-secondary text-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1 fw-semibold">
+                                    <i class="fas fa-calendar-alt me-2"></i>{{ reserva.fecha|date:"d/m/Y" }}
+                                </h6>
+                                <small class="opacity-90">
+                                    <i class="fas fa-clock me-1"></i>{{ reserva.hora_inicio|time:"H:i" }} - {{ reserva.hora_fin|time:"H:i" }}
+                                </small>
+                            </div>
+                            <span class="badge status-badge status-{{ reserva.estado|lower }}">
+                                {{ reserva.get_estado_display }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="appointment-info">
+                            <div class="info-item mb-3">
+                                <i class="fas fa-user-md text-custom-primary me-2"></i>
+                                <div>
+                                    <small class="text-muted d-block">{% if user.paciente %}Médico{% else %}Paciente{% endif %}</small>
+                                    <strong>
+                                        {% if user.paciente %}
+                                            Dr. {{ reserva.medico }}
+                                        {% else %}
+                                            {{ reserva.paciente }}
+                                        {% endif %}
+                                    </strong>
+                                </div>
+                            </div>
+                            
+                            {% if reserva.especialidad %}
+                            <div class="info-item mb-3">
+                                <i class="fas fa-stethoscope text-custom-secondary me-2"></i>
+                                <div>
+                                    <small class="text-muted d-block">Especialidad</small>
+                                    <strong>{{ reserva.especialidad }}</strong>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if reserva.observaciones %}
+                            <div class="info-item">
+                                <i class="fas fa-comment-alt text-custom-accent me-2"></i>
+                                <div>
+                                    <small class="text-muted d-block">Observaciones</small>
+                                    <small class="text-dark">{{ reserva.observaciones|truncatechars:50 }}</small>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer bg-transparent border-0 pt-0">
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'citas:reserva_detalle' reserva.id %}" 
+                               class="btn btn-outline-primary btn-sm flex-fill">
+                                <i class="fas fa-eye me-1"></i>Ver Detalles
+                            </a>
+                            {% if reserva.puede_cancelar and user.paciente %}
+                            <a href="{% url 'citas:reserva_cancelar' reserva.id %}" 
+                               class="btn btn-outline-danger btn-sm flex-fill">
+                                <i class="fas fa-times me-1"></i>Cancelar
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
-        </tbody>
-    </table>
-{% else %}
-    <p>No tienes reservas.</p>
-{% endif %}
+        </div>
+        
+        <!-- Información adicional -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="alert alert-info border-0 shadow-sm">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-info-circle fa-2x text-custom-primary me-3"></i>
+                        <div>
+                            <h6 class="mb-1">Información importante</h6>
+                            <small class="mb-0">Recuerda llegar 15 minutos antes de tu cita. Si necesitas cancelar, hazlo con al menos 2 horas de anticipación.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    {% else %}
+        <!-- Estado vacío -->
+        <div class="empty-state text-center py-5">
+            <div class="empty-state-icon mb-4">
+                <i class="fas fa-calendar-times fa-5x text-custom-secondary opacity-50"></i>
+            </div>
+            <h3 class="text-muted mb-3">No tienes citas programadas</h3>
+            <p class="text-muted mb-4 lead">
+                Parece que no tienes ninguna cita médica agendada en este momento.
+            </p>
+            <a href="{% url 'citas:reserva_crear' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-plus me-2"></i>Agendar Nueva Cita
+            </a>
+        </div>
+    {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Animaciones de fade-in */
+    .fade-in {
+        opacity: 0;
+        animation: fadeIn 0.8s ease-out forwards;
+    }
+    
+    .fade-in-delay-1 {
+        animation-delay: 0.2s;
+    }
+    
+    .fade-in-delay-2 {
+        animation-delay: 0.4s;
+    }
+    
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+        }
+    }
+    
+    /* Contenedor principal de la página */
+    .citas-page {
+        margin-top: -76px;
+        padding-top: 76px;
+    }
+    
+    /* Header de página */
+    .page-header {
+        background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+        margin-left: -15px;
+        margin-right: -15px;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-md);
+    }
+    
+    @media (min-width: 768px) {
+        .page-header {
+            border-radius: 0 0 2rem 2rem;
+        }
+    }
+    
+    /* Tarjetas de citas */
+    .appointment-card {
+        transition: all var(--transition-normal);
+        border-radius: var(--border-radius-lg);
+        overflow: hidden;
+    }
+    
+    .appointment-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .appointment-card .card-header {
+        border: none;
+        padding: 1.25rem;
+    }
+    
+    .appointment-card .card-body {
+        padding: 1.5rem;
+    }
+    
+    .appointment-card .card-footer {
+        padding: 0 1.5rem 1.5rem 1.5rem;
+    }
+    
+    /* Información de la cita */
+    .info-item {
+        display: flex;
+        align-items: flex-start;
+    }
+    
+    .info-item i {
+        margin-top: 0.25rem;
+        width: 20px;
+        flex-shrink: 0;
+    }
+    
+    .info-item div {
+        flex: 1;
+    }
+    
+    /* Badges de estado */
+    .status-badge {
+        font-size: 0.75rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .status-pendiente {
+        background-color: rgba(255, 193, 7, 0.2);
+        color: #856404;
+        border: 1px solid rgba(255, 193, 7, 0.3);
+    }
+    
+    .status-confirmada {
+        background-color: rgba(65, 191, 120, 0.2);
+        color: #155724;
+        border: 1px solid rgba(65, 191, 120, 0.3);
+    }
+    
+    .status-cancelada {
+        background-color: rgba(220, 53, 69, 0.2);
+        color: #721c24;
+        border: 1px solid rgba(220, 53, 69, 0.3);
+    }
+    
+    .status-completada {
+        background-color: rgba(108, 117, 125, 0.2);
+        color: #495057;
+        border: 1px solid rgba(108, 117, 125, 0.3);
+    }
+    
+    /* Estado vacío */
+    .empty-state {
+        padding: 4rem 2rem;
+        background: linear-gradient(135deg, rgba(65, 191, 120, 0.05) 0%, rgba(160, 216, 239, 0.05) 100%);
+        border-radius: var(--border-radius-lg);
+        border: 2px dashed rgba(160, 216, 239, 0.3);
+    }
+    
+    .empty-state-icon {
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0px);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+    
+    /* Botones personalizados */
+    .btn-outline-primary {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+        transition: all var(--transition-normal);
+    }
+    
+    .btn-outline-primary:hover {
+        background-color: var(--color-primary);
+        border-color: var(--color-primary);
+        color: white;
+        transform: translateY(-1px);
+    }
+    
+    .btn-outline-danger {
+        border-color: var(--color-danger);
+        color: var(--color-danger);
+        transition: all var(--transition-normal);
+    }
+    
+    .btn-outline-danger:hover {
+        background-color: var(--color-danger);
+        border-color: var(--color-danger);
+        color: white;
+        transform: translateY(-1px);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .citas-page {
+            margin-top: -60px;
+            padding-top: 60px;
+        }
+        
+        .page-header {
+            margin-bottom: 1rem;
+        }
+        
+        .page-header h1 {
+            font-size: 2rem;
+        }
+        
+        .page-header .btn {
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .appointment-card {
+            margin-bottom: 1rem;
+        }
+        
+        .empty-state {
+            padding: 2rem 1rem;
+        }
+        
+        .empty-state-icon i {
+            font-size: 3rem;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .page-header h1 {
+            font-size: 1.75rem;
+        }
+        
+        .appointment-card .card-body {
+            padding: 1rem;
+        }
+        
+        .appointment-card .card-footer {
+            padding: 0 1rem 1rem 1rem;
+        }
+        
+        .btn-sm {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+        }
+    }
+</style>
 {% endblock %}

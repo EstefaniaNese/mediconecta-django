@@ -22,28 +22,28 @@ body {
     background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%) !important;
     box-shadow: var(--shadow-md);
     transition: all var(--transition-normal);
-    min-height: 76px; /* Altura fija del navbar */
+    height: 90px; /* Altura fija del navbar */
+    max-height: 90px; /* Asegura que no crezca más */
 }
 
 .navbar-brand {
     display: flex;
     align-items: center;
     padding: 0.5rem 0; /* Padding vertical controlado */
-    height: 76px; /* Misma altura que el navbar */
+    height: 90px; /* Misma altura que el navbar */
     overflow: hidden; /* Evita que el logo se salga */
 }
 
 .navbar-brand img {
-    height: 55px;
+    height: 78px; /* Logo mucho más grande */
     width: auto;
-    max-height: calc(100% - 10px); /* Limita la altura al navbar menos padding */
+    max-height: 78px; /* Limita la altura máxima */
     object-fit: contain; /* Mantiene las proporciones */
-    transform: scale(1.1); /* Agranda el logo 10% más */
     transition: all var(--transition-normal);
 }
 
 .navbar-brand:hover img {
-    transform: scale(1.15); /* Efecto hover para agrandar un poco más */
+    transform: scale(1.05); /* Efecto hover sutil que no afecta el layout */
     filter: brightness(1.1); /* Efecto de brillo al hacer hover */
 }
 
@@ -268,21 +268,22 @@ body {
 /* Responsive */
 @media (max-width: 768px) {
     .navbar {
-        min-height: 60px; /* Navbar más pequeño en móviles */
+        height: 70px; /* Navbar más pequeño en móviles */
+        max-height: 70px;
     }
     
     .navbar-brand {
-        height: 60px; /* Ajustar altura del contenedor */
+        height: 70px; /* Ajustar altura del contenedor */
         padding: 0.25rem 0; /* Menos padding en móviles */
     }
     
     .navbar-brand img {
-        height: 45px; /* Logo más pequeño en móviles */
-        transform: scale(1.05); /* Menos escala en móviles */
+        height: 60px; /* Logo más grande en móviles */
+        max-height: 60px;
     }
     
     .navbar-brand:hover img {
-        transform: scale(1.1); /* Hover más sutil en móviles */
+        transform: scale(1.03); /* Hover más sutil en móviles */
     }
     
     .btn {
@@ -322,8 +323,8 @@ body {
 /* Layout Flexbox para evitar vacío bajo el footer */
 main {
     flex: 1;
-    margin-top: 76px; /* Altura del navbar fijo */
-    min-height: calc(100vh - 76px - 100px); /* Altura total - navbar - footer reducido */
+    margin-top: 90px; /* Altura del navbar fijo */
+    min-height: calc(100vh - 90px - 100px); /* Altura total - navbar - footer reducido */
     display: flex;
     flex-direction: column;
 }
@@ -336,50 +337,58 @@ footer {
 /* Ajustes para diferentes alturas de pantalla */
 @media (max-height: 600px) {
     main {
-        margin-top: 60px; /* Navbar más pequeño en pantallas bajas */
-        min-height: calc(100vh - 60px - 80px); /* Ajuste para pantallas bajas */
+        margin-top: 70px; /* Navbar más pequeño en pantallas bajas */
+        min-height: calc(100vh - 70px - 80px); /* Ajuste para pantallas bajas */
+    }
+    
+    .force-footer-visible .content-wrapper {
+        padding: 0.5rem 0; /* Menos padding en pantallas bajas */
     }
 }
 
 /* Ajustes específicos para páginas de login */
 .login-page-container {
-    min-height: calc(100vh - 76px);
+    min-height: calc(100vh - 90px);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2rem 0;
+    padding: 1rem 0;
 }
 
 /* Asegurar que el contenido siempre llene la pantalla en desktop */
 @media (min-width: 992px) {
     main {
-        min-height: calc(100vh - 76px - 120px); /* Altura más precisa para desktop */
+        min-height: calc(100vh - 90px - 120px); /* Altura más precisa para desktop */
     }
     
     .force-footer-visible {
-        min-height: 100vh; /* Siempre altura completa */
+        min-height: calc(100vh - 90px); /* Altura completa menos navbar */
     }
     
     .force-footer-visible .content-wrapper {
-        padding: 3rem 0; /* Más padding en desktop */
+        padding: 1.5rem 0; /* Padding moderado en desktop */
     }
 }
 
 /* Ajustes para zoom reducido y pantallas muy grandes */
 @media (min-width: 1400px) {
     main {
-        min-height: calc(100vh - 76px - 200px); /* Aún más altura para pantallas grandes */
+        min-height: calc(100vh - 90px - 150px); /* Ajustado para pantallas grandes */
+    }
+    
+    .force-footer-visible .content-wrapper {
+        padding: 2rem 0; /* Más padding en pantallas grandes */
     }
 }
 
 /* Ajustes para casos extremos de zoom muy reducido */
 @media (min-width: 1920px) {
     main {
-        min-height: calc(100vh - 76px - 120px); /* Para pantallas 4K o zoom muy reducido */
+        min-height: calc(100vh - 90px - 120px); /* Para pantallas 4K o zoom muy reducido */
     }
     
     .force-footer-visible .content-wrapper {
-        padding: 4rem 0; /* Más padding en pantallas muy grandes */
+        padding: 2.5rem 0; /* Padding ajustado para pantallas muy grandes */
     }
 }
 
@@ -398,30 +407,133 @@ footer {
 
 @media (max-width: 768px) {
     main {
-        margin-top: 60px; /* Navbar más pequeño en móviles */
-        min-height: calc(100vh - 60px - 80px); /* Ajuste para móviles */
+        margin-top: 70px; /* Navbar más pequeño en móviles */
+        min-height: calc(100vh - 70px - 80px); /* Ajuste para móviles */
     }
     
     .login-page-container {
-        min-height: calc(100vh - 60px);
-        padding: 1rem 0;
+        min-height: calc(100vh - 70px);
+        padding: 0.5rem 0;
+    }
+    
+    .force-footer-visible {
+        min-height: calc(100vh - 70px); /* Ajuste para navbar móvil */
+    }
+    
+    .force-footer-visible .content-wrapper {
+        padding: 0.5rem 0; /* Menos padding en móviles */
     }
 }
 
 /* Clase específica para páginas con poco contenido */
 .full-height-content {
-    min-height: calc(100vh - 76px - 140px);
+    min-height: calc(100vh - 90px - 140px);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
+/* Contenedor de mensajes de notificación flotante */
+.messages-container {
+    position: fixed;
+    top: 105px; /* Justo debajo del navbar (90px + margen) */
+    right: 20px; /* Esquina derecha */
+    z-index: 1050; /* Por encima del navbar */
+    width: 350px; /* Ancho fijo para notificaciones */
+    pointer-events: none; /* Permite clicks a través del contenedor */
+}
+
+.messages-container .alert {
+    pointer-events: auto; /* Pero las alertas sí son interactuables */
+    margin-bottom: 0.75rem;
+    box-shadow: var(--shadow-lg);
+    animation: slideInFromRight 0.4s ease-out;
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    font-size: 0.9rem;
+    border: none;
+}
+
+/* Animación de entrada desde la derecha */
+@keyframes slideInFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Animación de salida */
+@keyframes slideOutToRight {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+/* Estilos específicos para cada tipo de mensaje */
+.messages-container .alert-success {
+    background: linear-gradient(135deg, #41BF78, #369d65);
+    color: white;
+    border-left: 4px solid #2d8f47;
+}
+
+.messages-container .alert-danger {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+    border-left: 4px solid #a71e2a;
+}
+
+.messages-container .alert-warning {
+    background: linear-gradient(135deg, #ffc107, #e0a800);
+    color: #212529;
+    border-left: 4px solid #d39e00;
+}
+
+.messages-container .alert-info {
+    background: linear-gradient(135deg, #17a2b8, #138496);
+    color: white;
+    border-left: 4px solid #117a8b;
+}
+
+/* Botón de cerrar personalizado */
+.messages-container .btn-close {
+    filter: invert(1); /* Invierte el color del X para que sea visible */
+    opacity: 0.8;
+}
+
+.messages-container .btn-close:hover {
+    opacity: 1;
+}
+
+/* Ajuste para móviles */
+@media (max-width: 768px) {
+    .messages-container {
+        top: 80px; /* Navbar más pequeño en móviles (70px + margen) */
+        right: 10px;
+        left: 10px; /* En móviles ocupa más ancho */
+        width: auto;
+    }
+    
+    .messages-container .alert {
+        font-size: 0.85rem;
+        padding: 0.75rem 1rem;
+    }
+}
+
 /* Asegurar que el footer siempre sea visible */
 .force-footer-visible {
-    min-height: 100vh; /* Altura completa de la pantalla */
+    min-height: calc(100vh - 90px); /* Altura completa menos el navbar */
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Distribuye el espacio entre contenido y footer */
+    justify-content: center; /* Centra verticalmente */
 }
 
 .force-footer-visible .content-wrapper {
@@ -429,5 +541,6 @@ footer {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 2rem 0;
+    align-items: center; /* Centra horizontalmente también */
+    padding: 1rem 0; /* Padding reducido */
 }

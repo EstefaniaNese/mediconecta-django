@@ -6,10 +6,34 @@ class ReservaForm(forms.ModelForm):
         model = Reserva
         fields = ['medico', 'fecha', 'hora_inicio', 'hora_fin', 'motivo']
         widgets = {
-            'fecha': forms.DateInput(attrs={'type': 'date'}),
-            'hora_inicio': forms.TimeInput(attrs={'type': 'time'}),
-            'hora_fin': forms.TimeInput(attrs={'type': 'time'}),
-            'motivo': forms.Textarea(attrs={'rows': 3}),
+            'medico': forms.Select(attrs={
+                'class': 'form-control',
+                'placeholder': 'Selecciona un médico'
+            }),
+            'fecha': forms.DateInput(attrs={
+                'type': 'date',
+                'class': 'form-control'
+            }),
+            'hora_inicio': forms.TimeInput(attrs={
+                'type': 'time',
+                'class': 'form-control'
+            }),
+            'hora_fin': forms.TimeInput(attrs={
+                'type': 'time',
+                'class': 'form-control'
+            }),
+            'motivo': forms.Textarea(attrs={
+                'rows': 3,
+                'class': 'form-control',
+                'placeholder': 'Describe el motivo de tu consulta'
+            }),
+        }
+        labels = {
+            'medico': 'Médico',
+            'fecha': 'Fecha de la cita',
+            'hora_inicio': 'Hora de inicio',
+            'hora_fin': 'Hora de fin',
+            'motivo': 'Motivo de la consulta',
         }
         
 class HistorialMedicoForm(forms.ModelForm):

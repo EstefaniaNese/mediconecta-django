@@ -10,7 +10,10 @@ from .validators import (
 
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(
-        widget=forms.PasswordInput,
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ingresa tu contraseña'
+        }),
         validators=[
             validate_password_length,
             validate_password_digit,
@@ -19,11 +22,35 @@ class RegisterForm(forms.ModelForm):
         ],
         help_text="La contraseña debe tener al menos 8 caracteres, incluir una letra mayúscula, un número y un carácter especial."
     )
-    password2 = forms.CharField(label="Repite tu contraseña", widget=forms.PasswordInput)
+    password2 = forms.CharField(
+        label="Repite tu contraseña",
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Confirma tu contraseña'
+        })
+    )
 
     class Meta:
         model = User
         fields = ["username", "email", "first_name", "last_name"]
+        widgets = {
+            'username': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Elige un nombre de usuario'
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'tu@email.com'
+            }),
+            'first_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Tu nombre'
+            }),
+            'last_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Tu apellido'
+            }),
+        }
 
     def clean(self):
         data = super().clean()

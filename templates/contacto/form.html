@@ -3,7 +3,7 @@
 {% block title %}Contacto y Soporte · Mediconecta{% endblock %}
 {% block content %}
     <!-- Banner de contacto -->
-    <section class="category-banner position-relative text-center text-white mb-5">
+    <section class="category-banner position-relative text-center text-white mb-4" style="height: 300px;">
         <!-- Imagen de fondo -->
         <img src="{% static 'images/bannerContacto.avif' %}" alt="Banner contacto" 
             class="w-100 h-100 object-fit-cover position-absolute top-0 start-0" 
@@ -14,24 +14,24 @@
             style="z-index: -1; background: linear-gradient(135deg, rgba(4, 119, 191, 0.85) 0%, rgba(65, 191, 120, 0.6) 50%, rgba(242, 242, 242, 0.5) 100%);">
         </div>
         
-        <div class="container py-5" style="margin-top: 150px;">
+        <div class="container h-100 d-flex align-items-center justify-content-center">
             <div class="row">
                 <div class="col-12">
-                    <h1 class="display-3 fw-bold mb-4" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.3); color: white;">
+                    <h1 class="display-4 fw-bold mb-3" style="text-shadow: 2px 2px 8px rgba(0,0,0,0.3); color: white;">
                         <i class="fas fa-headset me-3"></i>Contacto y Soporte
                     </h1>
-                    <p class="lead fs-4" style="text-shadow: 1px 1px 4px rgba(0,0,0,0.5);">¿Necesitas ayuda? Estamos aquí para asistirte</p>
+                    <p class="lead fs-5" style="text-shadow: 1px 1px 4px rgba(0,0,0,0.5);">¿Necesitas ayuda? Estamos aquí para asistirte</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Contenido de contacto -->
-    <section class="contact-section">
+    <section class="contact-section mb-5 pb-4">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
-                    <div class="card border-0" style="box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);">
+                    <div class="card border-0 card-contacto">
                         <div class="card-body p-5">
                             <!-- ¿Necesitas ayuda? -->
                             <div class="mb-5">
@@ -73,7 +73,7 @@
                                 <h2 class="h4 text-custom-primary mb-3">
                                     <i class="fas fa-envelope me-2"></i>Envíanos un mensaje
                                 </h2>
-                                <form method="post">
+                                <form method="post" class="form-contacto">
                                     {% csrf_token %}
                                     <div class="row">
                                         <div class="col-md-6">
@@ -139,6 +139,13 @@
 
 {% block extra_css %}
 <style>
+    /* Fondo de la tarjeta de contacto */
+    .card-contacto {
+        background: linear-gradient(135deg, rgba(248, 249, 250, 1) 0%, rgba(241, 243, 245, 1) 100%);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+        border-radius: 1rem;
+    }
+    
     .text-custom-primary {
         color: #41BF78 !important;
     }
@@ -223,6 +230,21 @@
     input[type="email"],
     textarea {
         width: 100%;
+    }
+    
+    /* Fondo del formulario */
+    .form-contacto {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        border: 2px solid rgba(65, 191, 120, 0.2);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+    
+    .form-contacto:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        border-color: rgba(65, 191, 120, 0.35);
     }
 </style>
 {% endblock %}

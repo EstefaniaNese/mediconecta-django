@@ -1,95 +1,465 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}Detalle de Reserva{% endblock %}
+{% block title %}Detalle de Reserva · Mediconecta{% endblock %}
 
 {% block content %}
-<h1>Detalle de Reserva</h1>
+<div class="detalle-page">
+    <!-- Header de la página con gradiente -->
+    <div class="page-header bg-gradient-custom text-white py-4 mb-4">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-12 text-center">
+                    <h1 class="display-5 fw-bold mb-2">
+                        <i class="fas fa-file-medical me-3"></i>Detalle de Reserva
+                    </h1>
+                    <p class="lead mb-0">
+                        ID °{{ reserva.id }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<div class="card">
-    <div class="card-header">
-        <h2>Reserva #{{ reserva.id }}</h2>
-    </div>
-    <div class="card-body">
-        <h3>Información de la Cita</h3>
-        <dl>
-            <dt>Paciente</dt>
-            <dd>{{ reserva.paciente }}</dd>
-            
-            <dt>Médico</dt>
-            <dd>Dr. {{ reserva.medico }}</dd>
-            
-            <dt>Fecha</dt>
-            <dd>{{ reserva.fecha }}</dd>
-            
-            <dt>Hora</dt>
-            <dd>{{ reserva.hora_inicio }} - {{ reserva.hora_fin }}</dd>
-            
-            <dt>Estado</dt>
-            <dd>{{ reserva.get_estado_display }}</dd>
-            
-            <dt>Motivo</dt>
-            <dd>{{ reserva.motivo }}</dd>
-        </dl>
-        
-        {% if user.paciente == reserva.paciente and reserva.puede_cancelar %}
-            <a href="{% url 'citas:reserva_cancelar' reserva.id %}" class="btn btn-danger">Cancelar Reserva</a>
-        {% endif %}
-        
-        <hr>
-        
-        {% if historial %}
-            <h3>Historial Médico</h3>
-            <dl>
-                <dt>Fecha de Atención</dt>
-                <dd>{{ historial.fecha }}</dd>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Información de la Cita -->
+                <div class="detail-card shadow mb-4">
+                    <div class="card-header-custom">
+                        <h3 class="mb-0">
+                            <i class="fas fa-calendar-check me-2"></i>Información de la Cita
+                        </h3>
+                    </div>
+                    <div class="card-body-custom">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-user text-custom-primary me-2"></i>Paciente
+                                </div>
+                                <div class="info-value">{{ reserva.paciente }}</div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-user-md text-custom-primary me-2"></i>Médico
+                                </div>
+                                <div class="info-value">Dr. {{ reserva.medico }}</div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-calendar-alt text-custom-primary me-2"></i>Fecha
+                                </div>
+                                <div class="info-value">{{ reserva.fecha|date:"d/m/Y" }}</div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-clock text-custom-primary me-2"></i>Hora
+                                </div>
+                                <div class="info-value">{{ reserva.hora_inicio|time:"H:i" }} - {{ reserva.hora_fin|time:"H:i" }}</div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-info-circle text-custom-primary me-2"></i>Estado
+                                </div>
+                                <div class="info-value">
+                                    <span class="badge status-badge status-{{ reserva.estado|lower }}">
+                                        {{ reserva.get_estado_display }}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-item full-width">
+                                <div class="info-label">
+                                    <i class="fas fa-comment-medical text-custom-primary me-2"></i>Motivo
+                                </div>
+                                <div class="info-value">{{ reserva.motivo }}</div>
+                            </div>
+                        </div>
+                        
+                        {% if user.paciente == reserva.paciente and reserva.puede_cancelar %}
+                            <div class="mt-4">
+                                <a href="{% url 'citas:reserva_cancelar' reserva.id %}" class="btn btn-danger">
+                                    <i class="fas fa-times-circle me-2"></i>Cancelar Reserva
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
                 
-                <dt>Diagnóstico</dt>
-                <dd>{{ historial.diagnostico }}</dd>
-                
-                <dt>Tratamiento</dt>
-                <dd>{{ historial.tratamiento }}</dd>
-                
-                {% if historial.observaciones %}
-                    <dt>Observaciones</dt>
-                    <dd>{{ historial.observaciones }}</dd>
+                <!-- Historial Médico -->
+                {% if historial %}
+                <div class="detail-card shadow mb-4">
+                    <div class="card-header-custom">
+                        <h3 class="mb-0">
+                            <i class="fas fa-file-medical-alt me-2"></i>Historial Médico
+                        </h3>
+                    </div>
+                    <div class="card-body-custom">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-calendar text-custom-secondary me-2"></i>Fecha de Atención
+                                </div>
+                                <div class="info-value">{{ historial.fecha|date:"d/m/Y" }}</div>
+                            </div>
+                            
+                            <div class="info-item full-width">
+                                <div class="info-label">
+                                    <i class="fas fa-diagnoses text-custom-secondary me-2"></i>Diagnóstico
+                                </div>
+                                <div class="info-value">{{ historial.diagnostico }}</div>
+                            </div>
+                            
+                            <div class="info-item full-width">
+                                <div class="info-label">
+                                    <i class="fas fa-pills text-custom-secondary me-2"></i>Tratamiento
+                                </div>
+                                <div class="info-value">{{ historial.tratamiento }}</div>
+                            </div>
+                            
+                            {% if historial.observaciones %}
+                            <div class="info-item full-width">
+                                <div class="info-label">
+                                    <i class="fas fa-notes-medical text-custom-secondary me-2"></i>Observaciones
+                                </div>
+                                <div class="info-value">{{ historial.observaciones }}</div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% elif user.medico == reserva.medico and reserva.estado == 'confirmada' %}
+                <div class="detail-card shadow mb-4">
+                    <div class="card-header-custom">
+                        <h3 class="mb-0">
+                            <i class="fas fa-file-medical-alt me-2"></i>Registrar Atención
+                        </h3>
+                    </div>
+                    <div class="card-body-custom">
+                        <p class="text-muted mb-3">Registra la información médica de esta consulta.</p>
+                        <a href="{% url 'citas:historial_crear' reserva.id %}" class="btn btn-primary">
+                            <i class="fas fa-plus-circle me-2"></i>Registrar Atención
+                        </a>
+                    </div>
+                </div>
                 {% endif %}
-            </dl>
-        {% elif user.medico == reserva.medico and reserva.estado == 'confirmada' %}
-            <h3>Registrar Atención</h3>
-            <a href="{% url 'citas:historial_crear' reserva.id %}" class="btn btn-primary">Registrar Atención</a>
-        {% endif %}
-        
-        <hr>
-        
-        {% if cobro %}
-            <h3>Información de Cobro</h3>
-            <dl>
-                <dt>Monto</dt>
-                <dd>${{ cobro.monto }}</dd>
                 
-                <dt>Estado</dt>
-                <dd>{% if cobro.pagado %}Pagado{% else %}Pendiente{% endif %}</dd>
+                <!-- Información de Cobro -->
+                {% if cobro %}
+                <div class="detail-card shadow mb-4">
+                    <div class="card-header-custom">
+                        <h3 class="mb-0">
+                            <i class="fas fa-dollar-sign me-2"></i>Información de Cobro
+                        </h3>
+                    </div>
+                    <div class="card-body-custom">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-money-bill-wave text-success me-2"></i>Monto
+                                </div>
+                                <div class="info-value fw-bold text-success">${{ cobro.monto }}</div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-check-circle text-custom-accent me-2"></i>Estado
+                                </div>
+                                <div class="info-value">
+                                    {% if cobro.pagado %}
+                                        <span class="badge bg-success">Pagado</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">Pendiente</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            {% if cobro.pagado %}
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-calendar-check text-custom-accent me-2"></i>Fecha de Pago
+                                </div>
+                                <div class="info-value">{{ cobro.fecha_pago|date:"d/m/Y" }}</div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-credit-card text-custom-accent me-2"></i>Método de Pago
+                                </div>
+                                <div class="info-value">{{ cobro.metodo_pago }}</div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        {% if not cobro.pagado %}
+                        <div class="mt-4">
+                            {% if user.paciente == reserva.paciente %}
+                                <a href="{% url 'citas:cobro_pagar' reserva.id %}" class="btn btn-success">
+                                    <i class="fas fa-money-check-alt me-2"></i>Pagar
+                                </a>
+                            {% elif user.medico == reserva.medico %}
+                                <a href="{% url 'citas:cobro_actualizar' reserva.id %}" class="btn btn-primary">
+                                    <i class="fas fa-edit me-2"></i>Actualizar Cobro
+                                </a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
                 
-                {% if cobro.pagado %}
-                    <dt>Fecha de Pago</dt>
-                    <dd>{{ cobro.fecha_pago }}</dd>
-                    
-                    <dt>Método de Pago</dt>
-                    <dd>{{ cobro.metodo_pago }}</dd>
-                {% endif %}
-            </dl>
-            
-            {% if not cobro.pagado %}
-                {% if user.paciente == reserva.paciente %}
-                    <a href="{% url 'citas:cobro_pagar' reserva.id %}" class="btn btn-success">Pagar</a>
-                {% elif user.medico == reserva.medico %}
-                    <a href="{% url 'citas:cobro_actualizar' reserva.id %}" class="btn btn-primary">Actualizar Cobro</a>
-                {% endif %}
-            {% endif %}
-        {% endif %}
-    </div>
-    <div class="card-footer">
-        <a href="{% url 'citas:reserva_lista' %}" class="btn btn-secondary">Volver a la lista</a>
+                <!-- Botón volver -->
+                <div class="text-center mb-4">
+                    <a href="{% url 'citas:reserva_lista' %}" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-arrow-left me-2"></i>Volver a la lista
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Contenedor principal de la página */
+    .detalle-page {
+        margin-top: -76px;
+        padding-top: 76px;
+    }
+    
+    /* Header de página */
+    .page-header {
+        background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+        margin-left: -15px;
+        margin-right: -15px;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-md);
+    }
+    
+    @media (min-width: 768px) {
+        .page-header {
+            border-radius: 0 0 2rem 2rem;
+        }
+    }
+    
+    /* Tarjetas de detalle */
+    .detail-card {
+        background: white;
+        border-radius: 1rem;
+        overflow: hidden;
+        border: none;
+        transition: all var(--transition-normal);
+    }
+    
+    .detail-card:hover {
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .card-header-custom {
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+        color: white;
+        padding: 1.5rem;
+        border: none;
+    }
+    
+    .card-header-custom h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+    
+    .card-body-custom {
+        padding: 2rem;
+    }
+    
+    /* Grid de información */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .info-item.full-width {
+        grid-column: 1 / -1;
+    }
+    
+    .info-label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--color-text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .info-value {
+        font-size: 1rem;
+        color: var(--color-text-primary);
+        font-weight: 500;
+        padding: 0.75rem;
+        background: rgba(65, 191, 120, 0.05);
+        border-radius: 0.5rem;
+        border-left: 3px solid var(--color-primary);
+    }
+    
+    /* Badges de estado */
+    .status-badge {
+        font-size: 0.85rem;
+        padding: 0.5rem 1rem;
+        border-radius: 1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: inline-block;
+    }
+    
+    .status-pendiente {
+        background-color: rgba(255, 193, 7, 0.2);
+        color: #856404;
+        border: 1px solid rgba(255, 193, 7, 0.3);
+    }
+    
+    .status-confirmada {
+        background-color: rgba(65, 191, 120, 0.2);
+        color: #155724;
+        border: 1px solid rgba(65, 191, 120, 0.3);
+    }
+    
+    .status-cancelada {
+        background-color: rgba(220, 53, 69, 0.2);
+        color: #721c24;
+        border: 1px solid rgba(220, 53, 69, 0.3);
+    }
+    
+    .status-completada {
+        background-color: rgba(108, 117, 125, 0.2);
+        color: #495057;
+        border: 1px solid rgba(108, 117, 125, 0.3);
+    }
+    
+    /* Botones */
+    .btn {
+        border-radius: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: all var(--transition-normal);
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+    
+    .btn-primary {
+        background-color: var(--color-primary);
+        border-color: var(--color-primary);
+    }
+    
+    .btn-primary:hover {
+        background-color: #369d65;
+        border-color: #369d65;
+    }
+    
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+    
+    .btn-danger {
+        background-color: var(--color-danger);
+        border-color: var(--color-danger);
+    }
+    
+    .btn-danger:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+    
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+    
+    .btn-success:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+    
+    /* Colores personalizados */
+    .text-custom-primary {
+        color: var(--color-primary);
+    }
+    
+    .text-custom-secondary {
+        color: var(--color-accent);
+    }
+    
+    .text-custom-accent {
+        color: #17a2b8;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .detalle-page {
+            margin-top: -60px;
+            padding-top: 60px;
+        }
+        
+        .page-header {
+            margin-bottom: 1rem;
+        }
+        
+        .page-header h1 {
+            font-size: 1.75rem;
+        }
+        
+        .card-body-custom {
+            padding: 1.5rem;
+        }
+        
+        .info-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        .info-item.full-width {
+            grid-column: 1;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .page-header h1 {
+            font-size: 1.5rem;
+        }
+        
+        .page-header .lead {
+            font-size: 1rem;
+        }
+        
+        .card-body-custom {
+            padding: 1rem;
+        }
+        
+        .btn-lg {
+            padding: 0.75rem 1.25rem;
+            font-size: 1rem;
+        }
+    }
+</style>
 {% endblock %}
