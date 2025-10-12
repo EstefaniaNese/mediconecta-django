@@ -1,40 +1,28 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -e
 
-# Esperar a que la base de datos esté disponible
-echo "Esperando a que la base de datos esté disponible..."
-python -c "
-import sys
-import time
-import psycopg2
+echo "Iniciando aplicación Django..."
 
-start_time = time.time()
-timeout = 30
-while True:
-    try:
-        psycopg2.connect(
-            dbname='mediconecta',
-            user='postgres',
-            password='postgres',
-            host='db',
-            port='5432'
-        )
-        break
-    except psycopg2.OperationalError:
-        if time.time() - start_time > timeout:
-            print('Tiempo de espera agotado para la conexión a la base de datos')
-            sys.exit(1)
-        time.sleep(1)
-"
-echo "Base de datos disponible!"
-
+# Recolectar archivos estáticos
+echo "Recolectando archivos estáticos..."
 python manage.py collectstatic --noinput || true
+
+# Ejecutar migraciones
+echo "Ejecutando migraciones..."
 python manage.py migrate
 
-# Create a superuser automatically if DJANGO_SUPERUSER_* are set
+# Crear superusuario automáticamente si las variables están configuradas
 if [ -n "$DJANGO_SUPERUSER_USERNAME" ] && [ -n "$DJANGO_SUPERUSER_PASSWORD" ] && [ -n "$DJANGO_SUPERUSER_EMAIL" ]; then
+    echo "Creando superusuario..."
     python manage.py createsuperuser --noinput || true
 fi
 
-# Dev server (swap with gunicorn for prod)
-python manage.py runserver 0.0.0.0:8000
+echo "Configuración completada. Iniciando servidor..."
+
+# Ejecutar el comando pasado como argumentos (Railway usa Gunicorn)
+# Si no hay argumentos, usar runserver para desarrollo local
+if [ $# -eq 0 ]; then
+    python manage.py runserver 0.0.0.0:8000
+else
+    exec "$@"
+fi
