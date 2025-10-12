@@ -9,6 +9,17 @@ echo "DEBUG: $DJANGO_DEBUG"
 echo "ALLOWED_HOSTS: $DJANGO_ALLOWED_HOSTS"
 echo "DATABASE_URL presente: $([ -n "$DATABASE_URL" ] && echo "Sí" || echo "No")"
 
+# Verificar si DATABASE_URL usa hostname obsoleto
+if [ -n "$DATABASE_URL" ]; then
+    if echo "$DATABASE_URL" | grep -q "railway.internal"; then
+        echo "⚠️  WARNING: DATABASE_URL usa hostname .railway.internal (obsoleto)"
+        echo "⚠️  Esto causará errores de conexión. Ver RAILWAY_DATABASE_FIX.md"
+        echo "⚠️  Hostname detectado: $(echo $DATABASE_URL | grep -o '@[^/]*' | cut -c2-)"
+    else
+        echo "✓ DATABASE_URL configuración OK (hostname moderno)"
+    fi
+fi
+
 # Recolectar archivos estáticos
 echo "Recolectando archivos estáticos..."
 python manage.py collectstatic --noinput || echo "Advertencia: Error en collectstatic"

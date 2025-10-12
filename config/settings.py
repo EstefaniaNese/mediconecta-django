@@ -90,14 +90,30 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Configuración automática: PostgreSQL en producción (Railway), SQLite en desarrollo
 if 'DATABASE_URL' in os.environ:
     # Producción: usar PostgreSQL de Railway
+    database_url = os.environ.get('DATABASE_URL')
+    
+    # Logging para debugging (oculta la contraseña)
+    if database_url:
+        # Ocultar contraseña en logs
+        safe_url = database_url.split('@')[1] if '@' in database_url else 'URL no disponible'
+        print(f"[INFO] Conectando a base de datos: ...@{safe_url}")
+        
+        # Verificar si está usando hostname antiguo
+        if 'railway.internal' in database_url:
+            print("[WARNING] ⚠️  DATABASE_URL usa hostname .railway.internal (obsoleto)")
+            print("[WARNING] Solución: Ver RAILWAY_DATABASE_FIX.md")
+    
     DATABASES = {
         'default': dj_database_url.config(
+            default=database_url,
             conn_max_age=600,
-            ssl_require=False  # Cambiado para evitar problemas SSL
+            ssl_require=False,  # Railway maneja SSL en el proxy
+            conn_health_checks=True,  # Verificación de salud de la conexión
         )
     }
 else:
     # Desarrollo: usar SQLite
+    print("[INFO] Usando SQLite para desarrollo local")
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
