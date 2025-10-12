@@ -10,6 +10,17 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "unsafe-secret-key")
 DEBUG = os.getenv("DJANGO_DEBUG", "0") == "1"
 ALLOWED_HOSTS = [h.strip() for h in os.getenv("DJANGO_ALLOWED_HOSTS", "mediconecta-django-production.up.railway.app,*.railway.app").split(",")]
 
+# Configuración CSRF para producción
+CSRF_TRUSTED_ORIGINS = [
+    f"https://{host}" for host in ALLOWED_HOSTS if host and not host.startswith("localhost") and not host.startswith("127.0.0.1")
+]
+# Asegurar que los orígenes de Railway estén incluidos
+if not DEBUG:
+    CSRF_TRUSTED_ORIGINS.extend([
+        "https://mediconecta-django-production.up.railway.app",
+        "https://*.railway.app",
+    ])
+
 
 INSTALLED_APPS = [
     "django.contrib.admin",
