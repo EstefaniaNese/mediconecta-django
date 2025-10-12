@@ -27,5 +27,5 @@ USER appuser
 
 EXPOSE 8000
 
-# Simple CMD - Railway will override with startCommand
-CMD ["python", "manage.py", "runserver", "0.0.0.0:$PORT"]
+# Ejecutar nuestro script de inicio
+CMD ["sh", "-c", "chmod +x start.sh && ./start.sh"]
